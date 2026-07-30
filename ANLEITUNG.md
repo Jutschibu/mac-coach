@@ -1,47 +1,73 @@
 # Mac-Coach – Anleitung für Julien
 
-Ein Spaced-Repetition-Lernsystem für Mamas neuen MacBook Air. Eine einzige Datei (`index.html`), läuft komplett ohne Internet und ohne Server direkt im Browser. Der Lernstand wird im Browser gespeichert (localStorage).
+Ein Spaced-Repetition-Lernsystem, mit dem Mama den Umgang mit ihrem MacBook Air lernt: 25 Karten in 5 Themen, davon 9 mit interaktiven Übungen, die echte Aktionen erkennen (Klick, Rechtsklick, Doppelklick, Scrollen, Ziehen, Fake-Finder).
 
-## Übergabe an Mama (einmalig, ~5 Minuten)
+**Live:** https://jutschibu.github.io/mac-coach/
+**Quelle:** `~/Documents/Claude/Mac-Coach/` (Git-Repo, GitHub: `Jutschibu/mac-coach`, öffentlich)
 
-1. `index.html` auf ihren Mac bringen (AirDrop oder USB-Stick).
-2. Datei in ihren Ordner **Dokumente** legen und am besten ein Alias auf den Schreibtisch: Rechtsklick → „Alias erstellen" → Alias auf den Schreibtisch ziehen und z.B. „Mac lernen" nennen.
-3. Doppelklick öffnet die App im Browser. Wichtig: **immer im selben Browser** öffnen (Safari ODER Chrome festlegen), sonst hat sie zwei getrennte Speicherstände. Festlegen: Rechtsklick auf die Datei → „Informationen" → „Öffnen mit" → Browser wählen → „Alle ändern".
-4. In den Einstellungen (⚙️ oben rechts) ihren Vornamen eintragen.
-5. **Die erste Runde macht ihr zu zweit.** Danach ist das Ritual: morgens Doppelklick, Karten durchgehen, fertig.
+---
 
-## Wie es funktioniert
+## Teil 1: Einmalige Einrichtung bei Mama (ca. 5 Minuten, ihr macht das zusammen)
 
-- Pro Tag kommen **3 neue Themen** (einstellbar) plus alle fälligen Wiederholungen.
-- **9 Karten haben interaktive Spiel-Übungen** (alle 6 Trackpad-Karten + Ordner anlegen, Datei verschieben, Papierkorb): Die App erkennt die echte Aktion (Klick, Rechtsklick, Doppelklick, Scrollen, Ziehen) und bewertet selbst:
-  - Übung geschafft → das Übungsfeld verwandelt sich in eine große grüne Fläche („Perfekt – das hat geklappt!"), zählt automatisch als „Kann ich"
+Ziel: Sie hat ein Icon im Dock, ein Klick öffnet die App. Kein Browser, keine Adresse, kein Suchen.
+
+1. Auf **ihrem** Mac **Safari** öffnen (nicht Chrome – der Dock-Weg ist in Safari zuverlässiger).
+2. Oben in die Adressleiste eingeben: `jutschibu.github.io/mac-coach`
+3. Wenn die App da ist: In der Menüleiste oben auf **Ablage → Zum Dock hinzufügen**, Name „Mac-Coach" bestätigen. Jetzt liegt ein Icon (weißes Laptop mit grünem Haken) im Dock.
+4. **Wichtig:** Ab jetzt öffnet sie die App **immer über dieses Dock-Icon**, nie mehr über Safari. Grund: Safari führt für die Dock-App einen eigenen Speicher – wenn sie mal im Browser und mal im Dock übt, hätte sie zwei getrennte Lernstände.
+5. Im Dock-Fenster oben rechts auf **⚙️** und ihren Vornamen eintragen (für die Begrüßung).
+6. **Die erste Runde macht ihr gemeinsam.** Danach ist das Ritual: morgens Dock-Icon anklicken, „Jetzt üben", durchgehen, fertig.
+
+Wenn das Icon im Dock verrutscht oder verschwindet: Schritte 1 bis 3 wiederholen, der Lernstand bleibt erhalten.
+
+## Teil 2: Änderungen und Updates
+
+Du sagst mir im Chat, was du willst („füge ein Thema WLAN hinzu", „die Rechtsklick-Erklärung ist zu lang", „baue eine Übung für Lautstärke"). Ich ändere die App, teste sie im Browser und veröffentliche sie. Bei ihr passiert dann Folgendes von allein:
+
+- Beim nächsten Öffnen holt sich die App die neue Fassung (sie prüft beim Start `version.json` und lädt sich bei Bedarf einmal selbst neu).
+- **Ihr Lernstand bleibt dabei komplett erhalten** – der liegt in ihrem Browser, nicht in der App-Datei.
+- Neue Karten tauchen automatisch als „✨ neu" im normalen Rhythmus auf, bestehende behalten ihre Stufe.
+- Ist im `version.json` ein Text unter `neu` hinterlegt, sieht sie beim Öffnen einmal einen freundlichen Hinweis („✨ Es ist etwas Neues dazugekommen: …"). Beim allerersten Start erscheint der Hinweis nie.
+
+Sie muss also **nichts** installieren, nichts ersetzen, nichts bestätigen.
+
+### Wenn du selbst etwas veröffentlichen willst
+
+```bash
+cd ~/Documents/Claude/Mac-Coach && git add -A && git commit -m "Was geändert wurde" && git push
+```
+
+Danach dauert es 1 bis 3 Minuten, bis GitHub die neue Fassung ausliefert.
+
+**Zwei Regeln beim Ändern**, sonst geht ihr Lernstand für einzelne Karten verloren:
+1. **Bei jeder Veröffentlichung** die Versionsnummer an **beiden** Stellen hochziehen: `VERSION` in `index.html` und `version` in `version.json`. Nur dann holt sich ihre App die neue Fassung.
+2. **Karten-IDs nie umbenennen** (z.B. `rechtsklick`). Der Lernstand hängt an diesen IDs. Texte, Grafiken und Übungen darin ändern ist jederzeit gefahrlos.
+
+---
+
+## Wie das Lernsystem funktioniert
+
+- Pro Tag kommen **3 neue Themen** (in den Einstellungen änderbar) plus alle fälligen Wiederholungen.
+- **9 Karten haben interaktive Spiel-Übungen** (alle 6 Trackpad-Karten + Ordner anlegen, Datei verschieben, Papierkorb). Die App erkennt die echte Aktion und bewertet selbst:
+  - Geschafft → das Übungsfeld verwandelt sich in eine große grüne Fläche („Perfekt – das hat geklappt!") und zählt als „Kann ich".
   - Falsche Aktion → sanftes Feedback, was stattdessen passiert ist („Das war ein normaler Klick …"). Nach 2 Fehlversuchen klappt die Hilfe von selbst auf, nach 4 kommt ein druckfreier Ausstieg („kommt morgen einfach nochmal").
-  - **Ab der ersten Wiederholung** folgt nach der Spiel-Übung die Echt-Zugabe: „Und jetzt in echt, auf deinem Mac" mit Selbstauskunft („Hat geklappt" / „Klappt noch nicht" → kommt morgen wieder).
-- Die übrigen Karten (Internet, Mail, Schreibtisch-Theorie) laufen über Selbsteinschätzung:
-  - 😅 **Zeig's mir gleich nochmal** → Karte kommt am Ende der Runde erneut, morgen wieder
-  - 🙂 **Geht so** → morgen wieder
-  - 😄 **Kann ich!** → Abstand wächst eine Stufe
+  - **Ab der ersten Wiederholung** folgt die Echt-Zugabe: „Und jetzt in echt, auf deinem Mac" mit „✓ Hat am Mac geklappt" / „Am Mac klappt's noch nicht".
+- Die übrigen Karten laufen über Selbsteinschätzung (😅 gleich nochmal · 🙂 morgen wieder · 😄 Kann ich!).
+- **Der Rhythmus ist überall sichtbar:** Nach jedem Erfolg steht da, wann die Übung wiederkommt, plus eine Leiste `1 › 2 › 4 › 7 › 14 › 30 › 60 Tage Abstand` mit markierter aktueller Stufe. Jede neue Übung kommt am nächsten Tag wieder, danach wachsen die Abstände. Ab Stufe 4 (Wochenabstand) gilt eine Karte als „✓ sitzt".
 
-### Der Wiederholungs-Rhythmus ist überall sichtbar
+**🤔 „Das möchte ich Julien fragen"** steht auf jeder Karte. Was sie markiert, sammelt sich in den Einstellungen unter „Fragen an Julien" – da schaust du rein, wenn du sie besuchst oder anrufst.
 
-Nach jedem Erfolg steht auf dem Bildschirm, **wann genau** die Übung wiederkommt („Diese Übung kommt morgen wieder", „in 4 Tagen", „in einer Woche") plus eine Leiste `1 › 2 › 4 › 7 › 14 › 30 › 60 Tage Abstand`, in der die aktuelle Stufe markiert und die erreichten abgehakt sind. Auch die Knöpfe sagen die Folge an („dann erst in 4 Tagen wieder" / „dann morgen nochmal"). So ist ohne Fachbegriffe klar: manche Dinge sind Wiederholung, und der Abstand wächst mit jedem Erfolg.
+## Sicherung ihres Lernstands
 
-Die Stufen im Detail: **jede neue Übung kommt am nächsten Tag wieder** (dort erscheint dann auch die Echt-Zugabe), danach nach 2, 4, 7, 14, 30 und 60 Tagen. Ab Stufe 4 (Wochenabstand) gilt eine Karte in der Themenliste als „✓ sitzt". „Geht so" oder „Klappt noch nicht" wirft auf morgen zurück.
-- **🤔 „Das möchte ich Julien fragen"** auf jeder Karte: markiert das Thema für euch. Die Liste steht in den Einstellungen unter „Fragen an Julien" – schaut da rein, wenn du sie besuchst.
-- Über die Startseite kann sie jederzeit alles **nachschlagen** (ohne Bewertung).
+Der Lernstand liegt nur in ihrem Browser. Falls sie mal Website-Daten löscht, wäre er weg. Deshalb gelegentlich: ⚙️ → „Sicherung herunterladen" (kleine Datei, dort auch wieder einspielbar).
 
-## Inhalt (Prototyp: 25 Karten, 5 Themen)
+## Datenschutz
 
-Trackpad & Klicken (6) · Schreibtisch & Dock (5) · Ordner & Dateien (5) · Internet & YouTube (5) · E-Mail (4)
+Das Repo ist öffentlich, die App selbst enthält nur Lernkarten über Mac-Bedienung – nichts Persönliches. Ihr Lernstand, ihr Name und ihre Fragen werden **nie** hochgeladen, die bleiben ausschließlich auf ihrem Mac.
 
-## Sicherung
+## Ideen für später (bewusst noch nicht gebaut)
 
-Der Lernstand liegt nur im Browser. Falls sie mal den Browserverlauf/Websitedaten löscht, wäre er weg. Deshalb gelegentlich: Einstellungen → „Sicherung herunterladen" (kleine JSON-Datei, lässt sich dort auch wieder einspielen).
-
-## Ideen für Stufe 2 (bewusst noch nicht gebaut)
-
-- Echte Rückfragen per KI (bräuchte einen kleinen Server oder API-Key auf ihrem Mac)
-- Fake-Browser und Fake-Mail als Spiel-Übungen (erst, wenn sich der Simulations-Ansatz bewährt; Gefahr: Simulation weicht vom echten Programm ab)
-- Mehr Themen: WLAN, Lautstärke, Fotos, FaceTime, Software-Updates, Passwörter
-
-Neue Karten hinzufügen: in `index.html` im Block `const KARTEN = [...]` einfach einen Eintrag nach dem Muster der anderen ergänzen (plus ggf. eine Grafik-Funktion in `GRAFIKEN`).
+- **Offline-Fähigkeit** (Service Worker): Bisher braucht sie WLAN. Absichtlich weggelassen, weil ein fehlerhafter Cache dazu führen kann, dass sie eine alte Fassung sieht – der am schwersten zu erklärende Fehler bei ihr.
+- **Echte Rückfragen per KI** (bräuchte einen Server oder API-Key).
+- **Fake-Browser und Fake-Mail** als Spiel-Übungen (Risiko: Simulation weicht vom echten Programm ab).
+- **Mehr Themen:** WLAN, Lautstärke, Fotos, FaceTime, Software-Updates, Passwörter, Drucken.

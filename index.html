@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mac-Coach</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#3E7C6F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mac-Coach">
 <style>
   :root {
     --teal: #3E7C6F;
@@ -1630,7 +1636,7 @@ const KARTEN = [
    ============================================================ */
 /* Version dieser App-Datei. Muss zur "version" in version.json passen –
    sonst holt sich die App beim Start automatisch die neue Fassung. */
-const VERSION = "2.3.0";
+const VERSION = "2.4.0";
 
 /* Abstand nach der n-ten geschafften Wiederholung: Stufe 1 → morgen, Stufe 2 → 2 Tage, … */
 const PLAN_TAGE = [1, 2, 4, 7, 14, 30, 60];
