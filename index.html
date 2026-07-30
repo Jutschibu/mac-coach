@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mac-Coach</title>
+<style>
+  :root {
+    --teal: #3E7C6F;
+    --teal-dark: #2F6157;
+    --amber: #E8A03C;
+    --amber-soft: #FBF0DC;
+    --ink: #2B2A26;
+    --grey: #6B675E;
+    --line: #E3DFD5;
+    --paper: #FFFFFF;
+    --bg: #FAF6EF;
+    --green-soft: #E6F1EA;
+    --red: #C94F3D;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 21px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  #app { max-width: 720px; margin: 0 auto; padding: 1.2rem 1rem 3rem; }
+
+  h1 { font-size: 1.7rem; line-height: 1.2; }
+  h2 { font-size: 1.45rem; line-height: 1.25; }
+  p { margin-bottom: 0.7rem; }
+
+  button {
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 14px;
+  }
+  button:active { transform: scale(0.98); }
+
+  .btn-gross {
+    display: block;
+    width: 100%;
+    padding: 1.05rem 1.2rem;
+    background: var(--teal);
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 600;
+    border-radius: 16px;
+    box-shadow: 0 3px 0 var(--teal-dark);
+  }
+  .btn-gross:hover { background: var(--teal-dark); }
+
+  .btn-zart {
+    display: block;
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    background: var(--paper);
+    color: var(--ink);
+    border: 2px solid var(--line);
+    font-size: 1.02rem;
+    font-weight: 500;
+  }
+  .btn-zart:hover { border-color: var(--teal); }
+
+  .kopf {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.1rem;
+  }
+  .kopf .logo { font-weight: 700; font-size: 1.05rem; color: var(--teal); }
+  .kopf button { background: none; font-size: 1.2rem; padding: 0.3rem 0.5rem; }
+
+  .karte-box {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 1.4rem 1.4rem 1.6rem;
+    box-shadow: 0 2px 10px rgba(60, 50, 30, 0.06);
+  }
+
+  .chip {
+    display: inline-block;
+    background: var(--green-soft);
+    color: var(--teal-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    margin-bottom: 0.6rem;
+  }
+
+  .gfx {
+    margin: 1rem 0;
+    background: #FDFCF8;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 0.6rem;
+  }
+  .gfx svg { display: block; width: 100%; height: auto; }
+
+  .uebung {
+    background: var(--amber-soft);
+    border: 1.5px solid #EFD9B4;
+    border-radius: 16px;
+    padding: 1rem 1.1rem;
+    margin: 1rem 0;
+  }
+  .uebung .u-titel {
+    font-weight: 700;
+    color: #8A5E14;
+    margin-bottom: 0.35rem;
+    font-size: 1.02rem;
+  }
+  .uebung p { margin-bottom: 0; }
+
+  details.hilfe { margin: 0.8rem 0 0.4rem; }
+  details.hilfe summary {
+    cursor: pointer;
+    color: var(--teal-dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.4rem 0;
+    list-style-position: inside;
+  }
+  details.hilfe .hilfe-inhalt {
+    background: var(--green-soft);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+  }
+  details.hilfe li { margin-left: 1.1rem; margin-bottom: 0.35rem; }
+
+  .frage-zeile { margin-top: 0.9rem; text-align: center; }
+  .frage-zeile button {
+    background: none;
+    color: var(--grey);
+    font-size: 0.85rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .frage-zeile button.markiert { color: var(--teal-dark); font-weight: 600; text-decoration: none; }
+
+  .bewertung {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+  }
+  .bewertung button {
+    flex: 1;
+    padding: 0.9rem 0.4rem;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    min-height: 88px;
+  }
+  .bewertung .emo { display: block; font-size: 1.7rem; margin-bottom: 0.25rem; }
+  .b-nochmal { background: #FBEAE0; color: #8A4A14; border: 2px solid #EFC9A4; }
+  .b-nochmal:hover { background: #F8DFC9; }
+  .b-geht { background: #F1EEE6; color: var(--ink); border: 2px solid var(--line); }
+  .b-geht:hover { background: #E9E5D9; }
+  .b-kann { background: var(--teal); color: #fff; border: 2px solid var(--teal); box-shadow: 0 3px 0 var(--teal-dark); }
+  .b-kann:hover { background: var(--teal-dark); }
+
+  .fortschritt-leiste {
+    height: 12px;
+    background: #EDE8DC;
+    border-radius: 999px;
+    overflow: hidden;
+    flex: 1;
+  }
+  .fortschritt-leiste > div {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .session-kopf {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  .session-kopf .zaehler { font-size: 0.9rem; color: var(--grey); white-space: nowrap; font-weight: 600; }
+  .session-kopf .pause { background: none; color: var(--grey); font-size: 0.9rem; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+
+  .gruss { margin-bottom: 1.3rem; }
+  .gruss .unter { color: var(--grey); font-size: 1.02rem; margin-top: 0.25rem; }
+  .streak {
+    display: inline-block;
+    background: var(--amber-soft);
+    color: #8A5E14;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    margin-top: 0.6rem;
+  }
+
+  .themen-liste { margin-top: 1.6rem; }
+  .themen-liste h3 { font-size: 1.02rem; color: var(--grey); font-weight: 600; margin-bottom: 0.7rem; }
+  .thema-zeile {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.6rem;
+    width: 100%;
+    text-align: left;
+    font-size: 1rem;
+  }
+  .thema-zeile:hover { border-color: var(--teal); }
+  .thema-zeile .t-emoji { font-size: 1.5rem; }
+  .thema-zeile .t-name { font-weight: 600; flex: 1; }
+  .thema-zeile .t-stand { font-size: 0.82rem; color: var(--grey); }
+  .thema-zeile .mini-balken { width: 100%; height: 7px; background: #EDE8DC; border-radius: 999px; margin-top: 0.3rem; overflow: hidden; }
+  .thema-zeile .mini-balken > div { height: 100%; background: var(--teal); border-radius: 999px; }
+  .thema-zeile .t-mitte { flex: 1; }
+
+  .karten-liste button {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    text-align: left;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  .karten-liste button:hover { border-color: var(--teal); }
+  .karten-liste .status { font-size: 0.78rem; color: var(--grey); margin-left: auto; white-space: nowrap; }
+  .status.s-sicher { color: var(--teal-dark); font-weight: 600; }
+  .status.s-neu { color: #A08A50; }
+
+  .fertig-box { text-align: center; padding: 2.5rem 1rem; }
+  .fertig-box .gross-emoji { font-size: 4rem; margin-bottom: 0.8rem; }
+  .fertig-box p { color: var(--grey); }
+
+  .zurueck-leiste { margin-bottom: 1rem; }
+  .zurueck-leiste button {
+    background: none;
+    color: var(--teal-dark);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.3rem 0;
+  }
+
+  .einstellungen label { display: block; font-weight: 600; margin: 1.1rem 0 0.3rem; font-size: 0.95rem; }
+  .einstellungen input[type="text"], .einstellungen select {
+    font-family: inherit;
+    font-size: 1.05rem;
+    padding: 0.6rem 0.8rem;
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    width: 100%;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .einstellungen .klein { font-size: 0.85rem; color: var(--grey); margin-top: 0.2rem; }
+  .einstellungen .block { margin-top: 1.4rem; }
+  .fragen-liste li { margin-left: 1.2rem; margin-bottom: 0.3rem; }
+
+  .fuss {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #B0AB9F;
+  }
+
+  .neu-banner {
+    background: #FFF8E8;
+    border: 1.5px solid #EFD9B4;
+    border-radius: 16px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.1rem;
+  }
+  .neu-banner .nb-titel { font-weight: 700; color: #8A5E14; margin-bottom: 0.2rem; }
+  .neu-banner p { margin: 0; font-size: 0.95rem; }
+  .neu-banner button {
+    margin-top: 0.7rem;
+    background: none;
+    color: var(--teal-dark);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 0.2rem 0;
+  }
+
+  /* Spiel-Übungen */
+  .spiel-anweisung { margin-bottom: 0; font-weight: 500; }
+  .spiel-buehne {
+    position: relative;
+    background: #fff;
+    border: 2px dashed #D8D2C2;
+    border-radius: 14px;
+    margin-top: 0.7rem;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    overflow: hidden;
+  }
+  .geschafft { pointer-events: none; opacity: 0.8; }
+  .spiel-geschafft {
+    margin-top: 0.7rem;
+    background: var(--teal);
+    color: #fff;
+    border-radius: 16px;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-align: center;
+    padding: 1.2rem;
+    animation: sg-auf 0.45s ease;
+  }
+  .spiel-geschafft .sg-haken {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--teal-dark);
+    font-size: 2.3rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: sg-pop 0.55s cubic-bezier(0.2, 1.6, 0.4, 1);
+  }
+  .spiel-geschafft .sg-text { font-size: 1.2rem; font-weight: 700; }
+  @keyframes sg-auf { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  @keyframes sg-pop { 0% { transform: scale(0); } 70% { transform: scale(1.18); } 100% { transform: scale(1); } }
+  .spiel-feedback[hidden] { display: none; }
+  .spiel-feedback {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+    background: #FFF;
+    border: 1.5px solid #EFD9B4;
+    border-radius: 12px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+    color: #7A5210;
+  }
+  .spiel-erfolg {
+    background: var(--green-soft);
+    border: 1.5px solid #C9E0D2;
+    border-radius: 16px;
+    padding: 1.1rem 1.2rem;
+    margin-top: 1rem;
+    text-align: center;
+  }
+  .spiel-erfolg .se-titel { font-size: 1.25rem; font-weight: 700; color: var(--teal-dark); }
+  .spiel-erfolg .btn-gross { margin-top: 0.9rem; }
+  .spiel-erfolg .leise {
+    display: block;
+    margin: 0.7rem auto 0;
+    background: none;
+    color: var(--grey);
+    font-size: 0.85rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .echt-box {
+    background: var(--amber-soft);
+    border: 1.5px solid #EFD9B4;
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    margin-top: 0.9rem;
+    text-align: left;
+    font-size: 0.98rem;
+  }
+  .echt-knoepfe { display: flex; gap: 0.6rem; margin-top: 0.9rem; }
+  .echt-knoepfe button {
+    flex: 1;
+    padding: 0.8rem 0.5rem;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    min-height: 64px;
+    line-height: 1.3;
+  }
+  .k-sub { display: block; font-weight: 500; font-size: 0.78rem; opacity: 0.85; margin-top: 0.25rem; }
+
+  /* Wiederholungs-Rhythmus sichtbar machen */
+  .sr-box {
+    background: #fff;
+    border: 1.5px solid #C9E0D2;
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    margin-top: 0.9rem;
+    text-align: left;
+  }
+  .sr-titel { font-size: 0.88rem; font-weight: 700; color: var(--teal-dark); margin-bottom: 0.5rem; }
+  .sr-titel .sr-wann { color: var(--ink); }
+  .rhythmus { display: flex; align-items: center; flex-wrap: wrap; gap: 0.28rem; }
+  .r-pille {
+    min-width: 30px;
+    text-align: center;
+    padding: 0.2rem 0.35rem;
+    border-radius: 8px;
+    background: #F1EEE6;
+    color: #9C978C;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .r-pille.r-fertig { background: var(--green-soft); color: var(--teal-dark); }
+  .r-pille.r-jetzt {
+    background: var(--teal);
+    color: #fff;
+    box-shadow: 0 0 0 3px rgba(62, 124, 111, 0.18);
+  }
+  .r-tr { color: #CFCAC0; font-size: 0.75rem; }
+  .r-einheit { font-size: 0.78rem; color: var(--grey); margin-left: 0.25rem; }
+  .sr-erklaerung { font-size: 0.85rem; color: var(--grey); margin: 0.5rem 0 0; }
+  .sr-hinweis {
+    font-size: 0.82rem;
+    color: var(--grey);
+    text-align: center;
+    margin-top: 0.7rem;
+    line-height: 1.45;
+  }
+  .ziel-feld {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--green-soft);
+    border: 2.5px solid var(--teal);
+    color: var(--teal-dark);
+    font-weight: 700;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .ziel-feld .fuell {
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%; height: 0%;
+    background: var(--teal);
+    opacity: 0.25;
+    transition: height 0.7s linear;
+  }
+  .spiel-knopf {
+    position: absolute;
+    background: var(--teal);
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 0.85rem 1.5rem;
+    border-radius: 14px;
+    box-shadow: 0 3px 0 var(--teal-dark);
+  }
+  .spiel-objekt { position: absolute; text-align: center; width: 78px; cursor: grab; }
+  .spiel-objekt .obj-bild { font-size: 2.4rem; line-height: 1.15; }
+  .spiel-objekt .obj-name { font-size: 0.78rem; color: var(--ink); background: rgba(255,255,255,0.85); border-radius: 6px; }
+  .spiel-objekt.gewaehlt .obj-name { background: #BFD7EA; }
+  .obj-eingabe {
+    width: 76px;
+    font-size: 0.8rem;
+    font-family: inherit;
+    border: 1.5px solid var(--teal);
+    border-radius: 5px;
+    text-align: center;
+    user-select: text;
+    -webkit-user-select: text;
+  }
+  .spiel-ziel { position: absolute; text-align: center; width: 92px; border-radius: 12px; padding: 4px 0; }
+  .spiel-ziel.heiss { background: #CFE3D6; }
+  .fake-menu {
+    position: absolute;
+    z-index: 5;
+    background: #F9F8F4;
+    border: 1px solid #D5D0C3;
+    border-radius: 10px;
+    box-shadow: 0 8px 22px rgba(40,35,20,0.18);
+    padding: 4px;
+    min-width: 172px;
+    font-size: 0.9rem;
+  }
+  .fake-menu div { padding: 0.35rem 0.7rem; border-radius: 6px; cursor: pointer; }
+  .fake-menu div:hover { background: var(--teal); color: #fff; }
+  .ff {
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 0.7rem;
+    background: #fff;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .ff-titel {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: #F1EEE6;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--grey);
+  }
+  .ampel { display: flex; gap: 5px; }
+  .ampel span { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .ff-body { display: flex; min-height: 215px; }
+  .ff-seite {
+    width: 106px;
+    flex-shrink: 0;
+    background: #F5F2EA;
+    padding: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--grey);
+    line-height: 1.5;
+  }
+  .ff-aktiv { background: #DCE7DE; border-radius: 5px; padding: 2px 4px; color: var(--teal-dark); font-weight: 700; }
+  .ff-main { flex: 1; position: relative; touch-action: none; }
+  .brief-box {
+    height: 195px;
+    overflow-y: auto;
+    margin-top: 0.7rem;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    background: #fff;
+    font-size: 0.95rem;
+  }
+
+  /* SVG-Animationen */
+  @keyframes puls {
+    0% { r: 14; opacity: 0.9; }
+    70% { r: 26; opacity: 0; }
+    100% { r: 26; opacity: 0; }
+  }
+  svg .ring { animation: puls 1.6s ease-out infinite; }
+  @keyframes wippen {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+  }
+  svg .wipp { animation: wippen 1.5s ease-in-out infinite; }
+
+  @media (max-width: 480px) {
+    html { font-size: 19px; }
+    .bewertung { flex-direction: column; }
+    .bewertung button { min-height: 64px; }
+    .echt-knoepfe { flex-direction: column; }
+    .echt-knoepfe button { min-height: 56px; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+
+/* ============================================================
+   Farben für die Grafiken
+   ============================================================ */
+const F = {
+  teal: "#3E7C6F", tealDark: "#2F6157", amber: "#E8A03C",
+  ink: "#2B2A26", grau: "#8A867C", linie: "#D8D5CC",
+  papier: "#FFFFFF", screen: "#EAF3F6", korpus: "#D9D5CC",
+  tasten: "#CFCBC2", pad: "#F8F6F1",
+  rot: "#E25C4A", gelb: "#E8B93C", gruen: "#5FA860",
+  blau: "#4A7FC1", himmel: "#DCEBF2"
+};
+
+/* ============================================================
+   Grafik-Bausteine (SVG)
+   ============================================================ */
+function sv(inner, hoehe = 250) {
+  return `<svg viewBox="0 0 440 ${hoehe}" xmlns="http://www.w3.org/2000/svg" role="img">${inner}</svg>`;
+}
+
+function finger(x, y, mitRing = true) {
+  return `${mitRing ? `<circle class="ring" cx="${x}" cy="${y}" r="14" fill="none" stroke="${F.teal}" stroke-width="3"/>` : ""}
+    <circle cx="${x}" cy="${y}" r="13" fill="${F.teal}" opacity="0.9"/>
+    <circle cx="${x - 4}" cy="${y - 4}" r="4" fill="#fff" opacity="0.35"/>`;
+}
+
+function pfeil(x1, y1, x2, y2, farbe = F.amber, dicke = 4) {
+  const wk = Math.atan2(y2 - y1, x2 - x1);
+  const l = 11;
+  const p1x = x2 - l * Math.cos(wk - 0.45), p1y = y2 - l * Math.sin(wk - 0.45);
+  const p2x = x2 - l * Math.cos(wk + 0.45), p2y = y2 - l * Math.sin(wk + 0.45);
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${farbe}" stroke-width="${dicke}" stroke-linecap="round"/>
+    <path d="M${x2},${y2} L${p1x},${p1y} L${p2x},${p2y} Z" fill="${farbe}"/>`;
+}
+
+function tastatur(x, y, b, h) {
+  let keys = "";
+  const reihen = 3, spalten = 10;
+  const kb = b / spalten, kh = h / reihen;
+  for (let r = 0; r < reihen; r++)
+    for (let s = 0; s < spalten; s++)
+      keys += `<rect x="${x + s * kb + 2}" y="${y + r * kh + 2}" width="${kb - 4}" height="${kh - 4}" rx="3" fill="#C2BDB2"/>`;
+  return keys;
+}
+
+/* Laptop von oben: Tastatur + Trackpad */
+function laptopSzene(inhalt) {
+  return `<rect x="40" y="14" width="360" height="222" rx="18" fill="${F.korpus}"/>
+    <rect x="40" y="14" width="360" height="222" rx="18" fill="none" stroke="#C6C1B6" stroke-width="2"/>
+    ${tastatur(66, 30, 308, 62)}
+    <rect x="145" y="112" width="150" height="108" rx="12" fill="${F.pad}" stroke="${F.linie}" stroke-width="2"/>
+    <text x="220" y="107" text-anchor="middle" font-size="12" fill="${F.grau}" font-weight="600">Trackpad</text>
+    ${inhalt}`;
+}
+
+function gZeiger() {
+  return sv(`
+    <rect x="60" y="14" width="320" height="140" rx="10" fill="${F.screen}" stroke="${F.linie}" stroke-width="2"/>
+    <path class="wipp" d="M200,55 L200,105 L214,93 L224,116 L233,112 L223,89 L241,88 Z" fill="${F.ink}"/>
+    <text x="270" y="80" font-size="15" fill="${F.grau}">← der Pfeil</text>
+    <rect x="150" y="176" width="140" height="60" rx="10" fill="${F.pad}" stroke="${F.linie}" stroke-width="2"/>
+    <text x="220" y="171" text-anchor="middle" font-size="12" fill="${F.grau}" font-weight="600">Trackpad</text>
+    ${finger(195, 206, false)}
+    ${pfeil(210, 206, 262, 206)}
+    <text x="220" y="248" text-anchor="middle" font-size="14" fill="${F.grau}">Finger streicht sanft – Pfeil wandert mit</text>`, 256);
+}
+
+function gKlick() {
+  return sv(laptopSzene(`
+    ${finger(220, 166)}
+    <text x="220" y="200" text-anchor="middle" font-size="16" font-weight="700" fill="${F.tealDark}">Klick!</text>
+    <text x="330" y="166" font-size="14" fill="${F.grau}">1 Finger,</text>
+    <text x="330" y="184" font-size="14" fill="${F.grau}">1× drücken</text>`));
+}
+
+function gRechtsklick() {
+  return sv(`${laptopSzene(`
+    ${finger(200, 166)}
+    ${finger(243, 166)}
+    <text x="221" y="204" text-anchor="middle" font-size="15" font-weight="700" fill="${F.tealDark}">2 Finger gleichzeitig</text>`)}
+    <g>
+      <rect x="308" y="96" width="118" height="112" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+      <text x="320" y="122" font-size="13" fill="${F.ink}">Neuer Ordner</text>
+      <text x="320" y="147" font-size="13" fill="${F.ink}">Informationen</text>
+      <text x="320" y="172" font-size="13" fill="${F.ink}">Hintergrund …</text>
+      <text x="320" y="197" font-size="13" fill="${F.ink}">Sortieren nach</text>
+      <text x="367" y="88" text-anchor="middle" font-size="13" fill="${F.grau}">so ein Menü öffnet sich</text>
+    </g>`);
+}
+
+function gDoppelklick() {
+  return sv(laptopSzene(`
+    ${finger(220, 166)}
+    <text x="278" y="150" font-size="26" font-weight="800" fill="${F.amber}">2×</text>
+    <text x="220" y="204" text-anchor="middle" font-size="15" font-weight="700" fill="${F.tealDark}">klick-klick – schnell!</text>`));
+}
+
+function gScrollen() {
+  return sv(laptopSzene(`
+    ${finger(202, 170, false)}
+    ${finger(240, 170, false)}
+    ${pfeil(221, 150, 221, 128)}
+    ${pfeil(221, 192, 221, 210)}
+    <text x="316" y="160" font-size="14" fill="${F.grau}">2 Finger</text>
+    <text x="316" y="178" font-size="14" fill="${F.grau}">rauf / runter</text>`));
+}
+
+function gZiehen() {
+  return sv(`
+    <rect x="60" y="14" width="320" height="140" rx="10" fill="${F.screen}" stroke="${F.linie}" stroke-width="2"/>
+    <g opacity="0.45">
+      <rect x="95" y="50" width="46" height="56" rx="6" fill="${F.papier}" stroke="${F.grau}" stroke-width="2"/>
+      <line x1="104" y1="68" x2="132" y2="68" stroke="${F.grau}" stroke-width="2"/>
+      <line x1="104" y1="80" x2="132" y2="80" stroke="${F.grau}" stroke-width="2"/>
+    </g>
+    ${pfeil(150, 78, 265, 78, F.amber, 5)}
+    <rect x="280" y="50" width="46" height="56" rx="6" fill="${F.papier}" stroke="${F.ink}" stroke-width="2.5"/>
+    <line x1="289" y1="68" x2="317" y2="68" stroke="${F.ink}" stroke-width="2"/>
+    <line x1="289" y1="80" x2="317" y2="80" stroke="${F.ink}" stroke-width="2"/>
+    <rect x="150" y="176" width="140" height="60" rx="10" fill="${F.pad}" stroke="${F.linie}" stroke-width="2"/>
+    ${finger(190, 206, false)}
+    ${pfeil(206, 206, 258, 206)}
+    <text x="220" y="252" text-anchor="middle" font-size="14" fill="${F.grau}">gedrückt halten und dabei streichen</text>`, 260);
+}
+
+function dock(x, y, breite = 250, hervor = -1, punktBei = -1) {
+  const apps = [
+    { f1: "#4A9BD8", f2: "#E8F2FA", art: "finder" },
+    { f1: "#EA4335", f2: "#FBBC05", art: "chrome" },
+    { f1: "#1E73E8", f2: "#7FB2F0", art: "mail" },
+    { f1: "#E8A03C", f2: "#F5D9A8", art: "fotos" },
+    { f1: "#8A867C", f2: "#C4C0B6", art: "zahnrad" }
+  ];
+  const g = 34, abst = (breite - 60) / apps.length;
+  let out = `<rect x="${x}" y="${y}" width="${breite}" height="46" rx="12" fill="#F2EFE8" stroke="${F.linie}" stroke-width="1.5" opacity="0.95"/>`;
+  apps.forEach((a, i) => {
+    const ax = x + 12 + i * abst;
+    const ay = y + 6;
+    const ring = i === hervor ? `<rect x="${ax - 4}" y="${ay - 4}" width="${g + 8}" height="${g + 8}" rx="10" fill="none" stroke="${F.amber}" stroke-width="3.5"/>` : "";
+    let symbol = "";
+    if (a.art === "finder") symbol = `<rect x="${ax}" y="${ay}" width="${g}" height="${g}" rx="8" fill="${a.f2}"/><rect x="${ax}" y="${ay}" width="${g / 2}" height="${g}" rx="8" fill="${a.f1}"/><circle cx="${ax + 10}" cy="${ay + 14}" r="2.5" fill="${F.ink}"/><circle cx="${ax + 24}" cy="${ay + 14}" r="2.5" fill="${F.ink}"/><path d="M${ax + 8},${ay + 23} Q${ax + 17},${ay + 30} ${ax + 26},${ay + 23}" stroke="${F.ink}" stroke-width="2" fill="none"/>`;
+    else if (a.art === "chrome") symbol = `<circle cx="${ax + g / 2}" cy="${ay + g / 2}" r="${g / 2}" fill="#fff"/><circle cx="${ax + g / 2}" cy="${ay + g / 2}" r="${g / 2}" fill="none" stroke="#DADCE0" stroke-width="1"/><path d="M${ax + g / 2},${ay + g / 2} m-15,0 a15,15 0 0 1 26,-7.5 l-11,7.5 z" fill="#EA4335"/><path d="M${ax + g / 2},${ay + g / 2} m11,-7.5 a15,15 0 0 1 -4,22 l-7,-14.5 z" fill="#FBBC05"/><path d="M${ax + g / 2},${ay + g / 2} m7,14.5 a15,15 0 0 1 -22,-7 l15,-7.5 z" fill="#34A853"/><circle cx="${ax + g / 2}" cy="${ay + g / 2}" r="6.5" fill="#4285F4" stroke="#fff" stroke-width="2"/>`;
+    else if (a.art === "mail") symbol = `<rect x="${ax}" y="${ay}" width="${g}" height="${g}" rx="8" fill="${a.f1}"/><rect x="${ax + 6}" y="${ay + 10}" width="22" height="15" rx="2" fill="#fff"/><path d="M${ax + 6},${ay + 11} L${ax + 17},${ay + 19} L${ax + 28},${ay + 11}" stroke="${a.f1}" stroke-width="1.8" fill="none"/>`;
+    else if (a.art === "fotos") symbol = `<rect x="${ax}" y="${ay}" width="${g}" height="${g}" rx="8" fill="#fff" stroke="${F.linie}"/><circle cx="${ax + 17}" cy="${ay + 12}" r="5" fill="#F6C445"/><circle cx="${ax + 23}" cy="${ay + 17}" r="5" fill="#EA6A5A"/><circle cx="${ax + 17}" cy="${ay + 23}" r="5" fill="#4A9BD8"/><circle cx="${ax + 11}" cy="${ay + 17}" r="5" fill="#69B76B"/>`;
+    else symbol = `<rect x="${ax}" y="${ay}" width="${g}" height="${g}" rx="8" fill="${a.f2}"/><circle cx="${ax + g / 2}" cy="${ay + g / 2}" r="9" fill="none" stroke="#5F5B52" stroke-width="3" stroke-dasharray="4 3"/><circle cx="${ax + g / 2}" cy="${ay + g / 2}" r="3.5" fill="#5F5B52"/>`;
+    const punkt = i === punktBei ? `<circle cx="${ax + g / 2}" cy="${y + 44}" r="2.6" fill="${F.ink}"/>` : "";
+    out += ring + symbol + punkt;
+  });
+  return out;
+}
+
+function gSchreibtisch() {
+  return sv(`
+    <rect x="30" y="12" width="380" height="226" rx="12" fill="${F.himmel}" stroke="${F.linie}" stroke-width="2"/>
+    <circle cx="330" cy="180" r="90" fill="#BFDCC9"/>
+    <circle cx="130" cy="230" r="100" fill="#A9CBB8"/>
+    <rect x="30" y="12" width="380" height="22" rx="12" fill="#F8F6F1" stroke="${F.linie}" stroke-width="1"/>
+    <rect x="30" y="24" width="380" height="10" fill="#F8F6F1"/>
+    <text x="44" y="28" font-size="13" fill="${F.ink}"></text>
+    <text x="62" y="28" font-size="11" fill="${F.grau}" font-weight="600">Ablage  Bearbeiten  Darstellung</text>
+    <text x="384" y="28" font-size="11" fill="${F.grau}">🔍</text>
+    <rect x="330" y="52" width="40" height="34" rx="5" fill="#5B9BD5" opacity="0.9"/>
+    <rect x="336" y="48" width="14" height="8" rx="2" fill="#5B9BD5" opacity="0.9"/>
+    <text x="350" y="102" text-anchor="middle" font-size="11" fill="${F.ink}">Ordner</text>
+    ${dock(95, 186, 250, -1, -1)}
+    ${pfeil(70, 60, 60, 34, F.amber)}
+    <text x="76" y="58" font-size="13" fill="#8A5E14" font-weight="600">Menüleiste (oben)</text>
+    ${pfeil(70, 160, 90, 200, F.amber)}
+    <text x="52" y="150" font-size="13" fill="#8A5E14" font-weight="600">das Dock (unten)</text>`);
+}
+
+function gDock() {
+  return sv(`
+    ${dock(70, 90, 300, -1, -1)}
+    <rect x="106" y="42" width="76" height="26" rx="6" fill="${F.ink}" opacity="0.85"/>
+    <text x="144" y="60" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">Chrome</text>
+    <path d="M138,68 L144,80 L150,68 Z" fill="${F.ink}" opacity="0.85"/>
+    <text x="220" y="176" text-anchor="middle" font-size="14" fill="${F.grau}">Pfeil auf ein Symbol → der Name erscheint</text>`, 200);
+}
+
+function gProgrammOeffnen() {
+  return sv(`
+    <rect x="120" y="18" width="260" height="120" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <rect x="120" y="18" width="260" height="24" rx="10" fill="#F1EEE6"/>
+    <rect x="120" y="30" width="260" height="12" fill="#F1EEE6"/>
+    <circle cx="136" cy="30" r="5" fill="${F.rot}"/><circle cx="152" cy="30" r="5" fill="${F.gelb}"/><circle cx="168" cy="30" r="5" fill="${F.gruen}"/>
+    <text x="250" y="95" text-anchor="middle" font-size="14" fill="${F.grau}">das Fenster geht auf …</text>
+    ${dock(70, 170, 300, 1, 1)}
+    ${pfeil(160, 150, 148, 172, F.amber)}
+    <text x="60" y="150" font-size="13" fill="#8A5E14" font-weight="600">1 Klick auf Chrome</text>
+    <text x="230" y="238" font-size="13" fill="${F.grau}">← der kleine Punkt heißt: „läuft gerade"</text>`, 246);
+}
+
+function fensterMitAmpel(extra = "") {
+  return `<rect x="70" y="30" width="300" height="150" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <rect x="70" y="30" width="300" height="26" rx="10" fill="#F1EEE6"/>
+    <rect x="70" y="44" width="300" height="12" fill="#F1EEE6"/>
+    <circle cx="88" cy="43" r="6" fill="${F.rot}"/>
+    <circle cx="106" cy="43" r="6" fill="${F.gelb}"/>
+    <circle cx="124" cy="43" r="6" fill="${F.gruen}"/>
+    ${extra}`;
+}
+
+function gFensterKnoepfe() {
+  return sv(`
+    ${fensterMitAmpel()}
+    <line x1="88" y1="55" x2="88" y2="196" stroke="${F.rot}" stroke-width="2" stroke-dasharray="4 4"/>
+    <line x1="106" y1="55" x2="180" y2="196" stroke="#C79A20" stroke-width="2" stroke-dasharray="4 4"/>
+    <line x1="124" y1="55" x2="290" y2="196" stroke="${F.gruen}" stroke-width="2" stroke-dasharray="4 4"/>
+    <text x="88" y="216" text-anchor="middle" font-size="14" font-weight="700" fill="${F.rot}">Rot:</text>
+    <text x="88" y="233" text-anchor="middle" font-size="13" fill="${F.grau}">schließen</text>
+    <text x="185" y="216" text-anchor="middle" font-size="14" font-weight="700" fill="#B08A18">Gelb:</text>
+    <text x="185" y="233" text-anchor="middle" font-size="13" fill="${F.grau}">verstecken</text>
+    <text x="298" y="216" text-anchor="middle" font-size="14" font-weight="700" fill="${F.gruen}">Grün:</text>
+    <text x="298" y="233" text-anchor="middle" font-size="13" fill="${F.grau}">Vollbild</text>`, 244);
+}
+
+function gBeenden() {
+  return sv(`
+    ${dock(70, 150, 300, 1, 1)}
+    <rect x="112" y="30" width="120" height="96" rx="9" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <text x="126" y="56" font-size="13" fill="${F.grau}">Optionen</text>
+    <text x="126" y="80" font-size="13" fill="${F.grau}">Einblenden</text>
+    <rect x="118" y="92" width="108" height="24" rx="6" fill="${F.amber}" opacity="0.25"/>
+    <text x="126" y="109" font-size="13" font-weight="700" fill="${F.ink}">Beenden</text>
+    <path d="M142,126 L148,140 L154,126 Z" fill="${F.papier}" stroke="${F.linie}"/>
+    <text x="260" y="60" font-size="13" fill="${F.grau}">Rechtsklick (2 Finger)</text>
+    <text x="260" y="78" font-size="13" fill="${F.grau}">auf das Dock-Symbol,</text>
+    <text x="260" y="96" font-size="13" fill="${F.grau}">dann „Beenden" wählen</text>`, 214);
+}
+
+function finderFenster(inhalt, hoehe = 210) {
+  return `<rect x="50" y="20" width="340" height="${hoehe - 30}" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <rect x="50" y="20" width="340" height="26" rx="10" fill="#F1EEE6"/>
+    <rect x="50" y="34" width="340" height="12" fill="#F1EEE6"/>
+    <circle cx="66" cy="33" r="5" fill="${F.rot}"/><circle cx="82" cy="33" r="5" fill="${F.gelb}"/><circle cx="98" cy="33" r="5" fill="${F.gruen}"/>
+    <rect x="50" y="46" width="92" height="${hoehe - 56}" fill="#F5F2EA"/>
+    <text x="62" y="70" font-size="12" fill="${F.grau}" font-weight="600">Favoriten</text>
+    <text x="62" y="94" font-size="13" fill="${F.ink}">🖥 Schreibtisch</text>
+    <rect x="56" y="104" width="80" height="21" rx="5" fill="${F.teal}" opacity="0.18"/>
+    <text x="62" y="119" font-size="13" fill="${F.tealDark}" font-weight="700">📄 Dokumente</text>
+    <text x="62" y="144" font-size="13" fill="${F.ink}">⬇️ Downloads</text>
+    ${inhalt}`;
+}
+
+function ordnerSymbol(x, y, name, grosse = 1) {
+  const b = 44 * grosse, h = 32 * grosse;
+  return `<path d="M${x},${y + 5} L${x},${y + h} Q${x},${y + h + 5} ${x + 5},${y + h + 5} L${x + b - 5},${y + h + 5} Q${x + b},${y + h + 5} ${x + b},${y + h} L${x + b},${y + 2} Q${x + b},${y - 3} ${x + b - 5},${y - 3} L${x + b / 2},${y - 3} L${x + b / 2 - 7},${y - 10} L${x + 5},${y - 10} Q${x},${y - 10} ${x},${y - 5} Z" fill="#7FB4D8"/>
+    <rect x="${x}" y="${y + 2}" width="${b}" height="${h + 3}" rx="5" fill="#9CC8E4"/>
+    ${name ? `<text x="${x + b / 2}" y="${y + h + 22}" text-anchor="middle" font-size="12" fill="${F.ink}">${name}</text>` : ""}`;
+}
+
+function gFinder() {
+  return sv(`
+    ${finderFenster(`
+      ${ordnerSymbol(170, 80, "Rezepte")}
+      ${ordnerSymbol(245, 80, "Briefe")}
+      ${ordnerSymbol(320, 80, "Fotos")}
+    `)}
+    ${dock(150, 214, 140, 0, -1)}
+    ${pfeil(120, 250, 150, 240, F.amber)}
+    <text x="36" y="255" font-size="13" fill="#8A5E14" font-weight="600">das lachende</text>
+    <text x="36" y="271" font-size="13" fill="#8A5E14" font-weight="600">Gesicht = Finder</text>`, 280);
+}
+
+function gOrdnerNeu() {
+  return sv(`
+    ${finderFenster(`
+      <rect x="196" y="70" width="140" height="100" rx="9" fill="${F.papier}" stroke="${F.grau}" stroke-width="1.5"/>
+      <rect x="202" y="78" width="128" height="24" rx="6" fill="${F.amber}" opacity="0.3"/>
+      <text x="210" y="95" font-size="13" font-weight="700" fill="${F.ink}">Neuer Ordner</text>
+      <text x="210" y="122" font-size="13" fill="${F.grau}">Informationen</text>
+      <text x="210" y="146" font-size="13" fill="${F.grau}">Sortieren nach</text>
+      ${finger(180, 120)}
+    `)}
+    <text x="220" y="208" text-anchor="middle" font-size="14" fill="${F.grau}">2-Finger-Tipp auf eine freie weiße Stelle → „Neuer Ordner"</text>`, 218);
+}
+
+function gVerschieben() {
+  return sv(`
+    ${finderFenster(`
+      <g opacity="0.4">
+        <rect x="170" y="80" width="38" height="48" rx="5" fill="${F.papier}" stroke="${F.grau}" stroke-width="2"/>
+        <line x1="177" y1="96" x2="200" y2="96" stroke="${F.grau}" stroke-width="2"/>
+        <line x1="177" y1="108" x2="200" y2="108" stroke="${F.grau}" stroke-width="2"/>
+      </g>
+      ${pfeil(216, 104, 296, 104, F.amber, 5)}
+      ${ordnerSymbol(310, 88, "Übung")}
+    `)}
+    <text x="220" y="208" text-anchor="middle" font-size="14" fill="${F.grau}">Datei greifen, auf den Ordner ziehen, loslassen</text>`, 218);
+}
+
+function gSuchen() {
+  return sv(`
+    <rect x="30" y="16" width="380" height="24" rx="7" fill="#F8F6F1" stroke="${F.linie}"/>
+    <text x="44" y="33" font-size="12" fill="${F.grau}" font-weight="600">  Ablage  Bearbeiten</text>
+    <circle cx="392" cy="28" r="8" fill="none" stroke="${F.ink}" stroke-width="2.5"/>
+    <line x1="397" y1="34" x2="403" y2="40" stroke="${F.ink}" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="382" y="14" width="26" height="28" rx="6" fill="none" stroke="${F.amber}" stroke-width="3"/>
+    ${pfeil(360, 70, 386, 46, F.amber)}
+    <text x="270" y="88" font-size="13" fill="#8A5E14" font-weight="600">die Lupe, oben rechts</text>
+    <rect x="90" y="120" width="260" height="44" rx="12" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <circle cx="114" cy="142" r="8" fill="none" stroke="${F.grau}" stroke-width="2.5"/>
+    <line x1="119" y1="148" x2="125" y2="154" stroke="${F.grau}" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="138" y="149" font-size="16" fill="${F.ink}" font-weight="600">Übung|</text>
+    <rect x="90" y="170" width="260" height="34" rx="8" fill="#F5F2EA"/>
+    <text x="106" y="192" font-size="13" fill="${F.ink}">📁 Übung — Ordner</text>`, 216);
+}
+
+function gPapierkorb() {
+  return sv(`
+    <g opacity="0.5">
+      <rect x="90" y="50" width="40" height="50" rx="5" fill="${F.papier}" stroke="${F.grau}" stroke-width="2"/>
+      <line x1="98" y1="66" x2="122" y2="66" stroke="${F.grau}" stroke-width="2"/>
+      <line x1="98" y1="78" x2="122" y2="78" stroke="${F.grau}" stroke-width="2"/>
+    </g>
+    ${pfeil(140, 80, 250, 100, F.amber, 5)}
+    <path d="M270,80 L330,80 L323,160 Q322,168 314,168 L286,168 Q278,168 277,160 Z" fill="#B9B4A9"/>
+    <rect x="264" y="70" width="72" height="10" rx="4" fill="#A5A095"/>
+    <line x1="288" y1="95" x2="291" y2="152" stroke="#8F8A7F" stroke-width="3"/>
+    <line x1="300" y1="95" x2="300" y2="152" stroke="#8F8A7F" stroke-width="3"/>
+    <line x1="312" y1="95" x2="309" y2="152" stroke="#8F8A7F" stroke-width="3"/>
+    <text x="300" y="196" text-anchor="middle" font-size="13" fill="${F.grau}">der Papierkorb (ganz rechts im Dock)</text>
+    <text x="110" y="130" text-anchor="middle" font-size="13" fill="${F.grau}">Datei</text>`, 208);
+}
+
+function browserFenster(url, inhalt, addrMarkiert = false, backMarkiert = false) {
+  return `<rect x="40" y="16" width="360" height="200" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <rect x="40" y="16" width="360" height="52" rx="10" fill="#F1EEE6"/>
+    <rect x="40" y="42" width="360" height="26" fill="#F1EEE6"/>
+    <circle cx="56" cy="30" r="5" fill="${F.rot}"/><circle cx="72" cy="30" r="5" fill="${F.gelb}"/><circle cx="88" cy="30" r="5" fill="${F.gruen}"/>
+    ${backMarkiert ? `<circle cx="62" cy="54" r="13" fill="none" stroke="${F.amber}" stroke-width="3"/>` : ""}
+    ${pfeil(70, 54, 56, 54, F.ink, 2.5)}
+    ${pfeil(84, 54, 98, 54, "#B5B0A5", 2.5)}
+    <rect x="112" y="44" width="272" height="21" rx="10" fill="${F.papier}" stroke="${addrMarkiert ? F.amber : F.linie}" stroke-width="${addrMarkiert ? 3 : 1.5}"/>
+    <text x="126" y="59" font-size="13" fill="${F.ink}" font-weight="600">${url}</text>
+    ${inhalt}`;
+}
+
+function gChrome() {
+  return sv(`
+    ${browserFenster("google.de", `
+      <circle cx="220" cy="120" r="24" fill="#fff" stroke="#DADCE0"/>
+      <path d="M220,120 m-20,0 a20,20 0 0 1 35,-10 l-15,10 z" fill="#EA4335"/>
+      <path d="M220,120 m15,-10 a20,20 0 0 1 -6,30 l-9,-20 z" fill="#FBBC05"/>
+      <path d="M220,120 m9,20 a20,20 0 0 1 -29,-10 l20,-10 z" fill="#34A853"/>
+      <circle cx="220" cy="120" r="8.5" fill="#4285F4" stroke="#fff" stroke-width="2.5"/>
+      <text x="220" y="170" text-anchor="middle" font-size="14" fill="${F.grau}">Google Chrome – dein Fenster ins Internet</text>
+    `)}
+    ${dock(145, 226, 150, 1, -1)}
+    ${pfeil(110, 250, 143, 250, F.amber)}
+    <text x="98" y="255" text-anchor="end" font-size="13" fill="#8A5E14" font-weight="600">hier klicken</text>`, 286);
+}
+
+function gAdressleiste() {
+  return sv(`
+    ${browserFenster("youtube.com", `
+      <text x="220" y="130" text-anchor="middle" font-size="14" fill="${F.grau}">1. oben ins weiße Feld klicken</text>
+      <text x="220" y="152" text-anchor="middle" font-size="14" fill="${F.grau}">2. Adresse tippen</text>
+      <text x="220" y="174" text-anchor="middle" font-size="14" fill="${F.grau}">3. Enter-Taste (↵) drücken</text>
+    `, true)}
+    ${pfeil(340, 90, 350, 68, F.amber)}
+    <text x="336" y="106" text-anchor="end" font-size="13" fill="#8A5E14" font-weight="600">die Adressleiste</text>`, 226);
+}
+
+function gGoogeln() {
+  return sv(browserFenster("Apfelkuchen Rezept", `
+    <text x="64" y="98" font-size="15" fill="#1A0DAB" font-weight="600" text-decoration="underline">Omas bester Apfelkuchen – einfach &amp; saftig</text>
+    <rect x="64" y="106" width="220" height="8" rx="4" fill="#EDE8DC"/>
+    <text x="64" y="142" font-size="15" fill="#1A0DAB" font-weight="600" text-decoration="underline">Apfelkuchen in 30 Minuten</text>
+    <rect x="64" y="150" width="180" height="8" rx="4" fill="#EDE8DC"/>
+    <text x="64" y="186" font-size="15" fill="#1A0DAB" font-weight="600" text-decoration="underline">Klassischer gedeckter Apfelkuchen</text>
+    <rect x="64" y="194" width="200" height="8" rx="4" fill="#EDE8DC"/>
+  `), 226);
+}
+
+function gYoutube() {
+  return sv(browserFenster("youtube.com", `
+    <rect x="120" y="80" width="200" height="26" rx="13" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <text x="134" y="98" font-size="13" fill="${F.grau}">Gymnastik für den Rücken 🔍</text>
+    <rect x="64" y="120" width="100" height="60" rx="6" fill="#EDE8DC"/><path d="M104,142 L104,158 L120,150 Z" fill="${F.rot}"/>
+    <rect x="172" y="120" width="100" height="60" rx="6" fill="#EDE8DC"/><path d="M212,142 L212,158 L228,150 Z" fill="${F.rot}"/>
+    <rect x="280" y="120" width="100" height="60" rx="6" fill="#EDE8DC"/><path d="M320,142 L320,158 L336,150 Z" fill="${F.rot}"/>
+    <rect x="64" y="188" width="80" height="8" rx="4" fill="#E0DBCE"/>
+    <rect x="172" y="188" width="80" height="8" rx="4" fill="#E0DBCE"/>
+    <rect x="280" y="188" width="80" height="8" rx="4" fill="#E0DBCE"/>
+  `), 226);
+}
+
+function gZurueck() {
+  return sv(`
+    ${browserFenster("wetter.com", `
+      <text x="220" y="140" text-anchor="middle" font-size="14" fill="${F.grau}">Der Pfeil oben links bringt dich</text>
+      <text x="220" y="162" text-anchor="middle" font-size="14" fill="${F.grau}">immer eine Seite zurück.</text>
+    `, false, true)}
+    ${pfeil(100, 100, 70, 70, F.amber)}
+    <text x="106" y="110" font-size="13" fill="#8A5E14" font-weight="600">der Zurück-Pfeil</text>`, 226);
+}
+
+function mailFenster(modus) {
+  const zeile = (y, fett, blau) => `
+    ${blau ? `<circle cx="140" cy="${y + 10}" r="4" fill="#1E73E8"/>` : ""}
+    <rect x="152" y="${y}" width="${fett ? 90 : 70}" height="9" rx="4" fill="${fett ? "#54504A" : "#C9C4B8"}"/>
+    <rect x="152" y="${y + 14}" width="105" height="7" rx="3" fill="#DDD8CB"/>`;
+  const listeAktiv = modus === "lesen" || modus === "antworten";
+  return `<rect x="34" y="16" width="372" height="204" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <rect x="34" y="16" width="372" height="46" rx="10" fill="#F1EEE6"/>
+    <rect x="34" y="40" width="372" height="22" fill="#F1EEE6"/>
+    <circle cx="50" cy="30" r="5" fill="${F.rot}"/><circle cx="66" cy="30" r="5" fill="${F.gelb}"/><circle cx="82" cy="30" r="5" fill="${F.gruen}"/>
+    ${/* Werkzeugleiste: Neue Mail, Antworten, Senden */""}
+    <g ${modus === "schreiben" ? `` : `opacity="0.55"`}>
+      <rect x="106" y="26" width="30" height="26" rx="6" fill="${modus === "schreiben" ? F.amber : "#E5E1D6"}" ${modus === "schreiben" ? `stroke="${F.amber}" stroke-width="2"` : ""} opacity="${modus === "schreiben" ? 0.35 : 1}"/>
+      <path d="M113,45 L126,32 L129,35 L116,48 L112,49 Z" fill="#54504A"/>
+      <line x1="113" y1="49" x2="120" y2="49" stroke="#54504A" stroke-width="2"/>
+    </g>
+    <g ${modus === "antworten" ? `` : `opacity="0.55"`}>
+      ${modus === "antworten" ? `<rect x="148" y="26" width="34" height="26" rx="6" fill="${F.amber}" opacity="0.35"/><rect x="148" y="26" width="34" height="26" rx="6" fill="none" stroke="${F.amber}" stroke-width="2.5"/>` : ""}
+      <path d="M158,38 L169,30 L169,35 Q178,35 178,46 Q173,40 169,41 L169,46 Z" fill="#54504A"/>
+    </g>
+    <rect x="34" y="62" width="96" height="158" fill="#F5F2EA"/>
+    <text x="46" y="86" font-size="12" font-weight="700" fill="${F.tealDark}">📥 Eingang</text>
+    <text x="46" y="110" font-size="12" fill="${F.grau}">📤 Gesendet</text>
+    <text x="46" y="134" font-size="12" fill="${F.grau}">🗑 Papierkorb</text>
+    ${listeAktiv ? `<rect x="132" y="70" width="138" height="34" rx="6" fill="${F.teal}" opacity="0.15"/>` : ""}
+    ${zeile(76, true, true)}
+    ${zeile(116, true, true)}
+    ${zeile(156, false, false)}
+    ${zeile(196, false, false)}
+    <line x1="272" y1="62" x2="272" y2="220" stroke="${F.linie}" stroke-width="1.5"/>
+    ${modus === "lesen" || modus === "antworten" ? `
+      <rect x="284" y="78" width="100" height="10" rx="4" fill="#54504A"/>
+      <rect x="284" y="100" width="110" height="7" rx="3" fill="#D5D0C3"/>
+      <rect x="284" y="114" width="104" height="7" rx="3" fill="#D5D0C3"/>
+      <rect x="284" y="128" width="110" height="7" rx="3" fill="#D5D0C3"/>
+      <rect x="284" y="142" width="80" height="7" rx="3" fill="#D5D0C3"/>` : `
+      <text x="338" y="140" text-anchor="middle" font-size="12" fill="${F.grau}">Lesebereich</text>`}`;
+}
+
+function gMailOeffnen() {
+  return sv(`
+    ${mailFenster("uebersicht")}
+    ${pfeil(180, 250, 150, 232, F.amber)}
+    <text x="188" y="256" font-size="13" fill="#8A5E14" font-weight="600">links: Postfächer · Mitte: deine E-Mails (● = ungelesen)</text>
+    `, 266);
+}
+
+function gMailLesen() {
+  return sv(`
+    ${mailFenster("lesen")}
+    <text x="220" y="248" text-anchor="middle" font-size="14" fill="${F.grau}">1 Klick auf eine E-Mail in der Liste → rechts steht sie groß</text>`, 258);
+}
+
+function gAntworten() {
+  return sv(`
+    ${mailFenster("antworten")}
+    ${pfeil(190, 100, 172, 56, F.amber)}
+    <text x="196" y="110" font-size="13" fill="#8A5E14" font-weight="600">der Antworten-Pfeil</text>`, 240);
+}
+
+function gMailSchreiben() {
+  return sv(`
+    <rect x="60" y="16" width="320" height="212" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <rect x="60" y="16" width="320" height="40" rx="10" fill="#F1EEE6"/>
+    <rect x="60" y="36" width="320" height="20" fill="#F1EEE6"/>
+    <circle cx="76" cy="30" r="5" fill="${F.rot}"/><circle cx="92" cy="30" r="5" fill="${F.gelb}"/><circle cx="108" cy="30" r="5" fill="${F.gruen}"/>
+    <rect x="336" y="22" width="36" height="26" rx="7" fill="${F.teal}"/>
+    <path d="M346,40 L364,29 L353,42 L352,37 Z" fill="#fff"/>
+    <text x="322" y="39" text-anchor="end" font-size="11" fill="${F.grau}" font-weight="600">Senden →</text>
+    <text x="76" y="82" font-size="14" fill="${F.grau}">An:</text>
+    <rect x="120" y="68" width="240" height="22" rx="5" fill="#FBF9F4" stroke="${F.linie}"/>
+    <text x="128" y="84" font-size="13" fill="${F.ink}">julien@beispiel.de</text>
+    <text x="76" y="114" font-size="14" fill="${F.grau}">Betreff:</text>
+    <rect x="140" y="100" width="220" height="22" rx="5" fill="#FBF9F4" stroke="${F.linie}"/>
+    <text x="148" y="116" font-size="13" fill="${F.ink}">Grüße</text>
+    <line x1="76" y1="134" x2="364" y2="134" stroke="${F.linie}" stroke-width="1.5"/>
+    <text x="76" y="162" font-size="14" fill="${F.ink}">Hallo Julien,</text>
+    <text x="76" y="184" font-size="14" fill="${F.ink}">das ist meine erste eigene E-Mail!</text>
+    <text x="76" y="206" font-size="14" fill="${F.ink}">Liebe Grüße, Mama</text>`, 240);
+}
+
+const GRAFIKEN = {
+  zeiger: gZeiger, klick: gKlick, rechtsklick: gRechtsklick, doppelklick: gDoppelklick,
+  scrollen: gScrollen, ziehen: gZiehen, schreibtisch: gSchreibtisch, dock: gDock,
+  programmoeffnen: gProgrammOeffnen, fensterknoepfe: gFensterKnoepfe, beenden: gBeenden,
+  finder: gFinder, ordnerneu: gOrdnerNeu, verschieben: gVerschieben, suchen: gSuchen,
+  papierkorb: gPapierkorb, chrome: gChrome, adressleiste: gAdressleiste, googeln: gGoogeln,
+  youtube: gYoutube, zurueck: gZurueck, mailoeffnen: gMailOeffnen, maillesen: gMailLesen,
+  antworten: gAntworten, mailschreiben: gMailSchreiben
+};
+
+/* ============================================================
+   Interaktive Spiel-Übungen
+   ============================================================ */
+function ueberlappt(a, b) {
+  const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+  const cx = ra.left + ra.width / 2, cy = ra.top + ra.height / 2;
+  return cx > rb.left && cx < rb.right && cy > rb.top && cy < rb.bottom;
+}
+
+/* Festhalten-und-Ziehen für Objekt → Zielzone */
+function machZiehbar(buehne, objekt, ziel, api, opt) {
+  const startPos = { left: objekt.offsetLeft, top: objekt.offsetTop };
+  let start = null;
+  objekt.style.touchAction = "none";
+  objekt.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    objekt.setPointerCapture(e.pointerId);
+    start = { x: e.clientX, y: e.clientY, left: objekt.offsetLeft, top: objekt.offsetTop };
+    objekt.style.cursor = "grabbing";
+  });
+  objekt.addEventListener("pointermove", e => {
+    if (!start) return;
+    const l = Math.max(0, Math.min(start.left + (e.clientX - start.x), buehne.clientWidth - objekt.offsetWidth));
+    const t = Math.max(0, Math.min(start.top + (e.clientY - start.y), buehne.clientHeight - objekt.offsetHeight));
+    objekt.style.left = l + "px";
+    objekt.style.top = t + "px";
+    ziel.classList.toggle("heiss", ueberlappt(objekt, ziel));
+  });
+  objekt.addEventListener("pointerup", e => {
+    if (!start) return;
+    const bewegt = Math.hypot(e.clientX - start.x, e.clientY - start.y) > 12;
+    start = null;
+    objekt.style.cursor = "grab";
+    if (ueberlappt(objekt, ziel)) {
+      ziel.classList.remove("heiss");
+      opt.inZiel(objekt, ziel);
+      api.erfolg(opt.erfolgText);
+    } else if (bewegt) {
+      objekt.style.left = startPos.left + "px";
+      objekt.style.top = startPos.top + "px";
+      api.fehler("Fast! Du hast zu früh losgelassen. Halte gedrückt, bis du über dem Ziel bist, und lass erst DANN los.");
+    } else {
+      api.fehler("Nur gedrückt, aber nicht gezogen. Drücken, HALTEN und dabei mit dem Finger streichen, dann wandert es mit.");
+    }
+  });
+}
+
+function fakeMenue(main, e, inhaltHTML) {
+  const m = document.createElement("div");
+  m.className = "fake-menu";
+  m.innerHTML = inhaltHTML;
+  const r = main.getBoundingClientRect();
+  m.style.left = Math.max(4, Math.min(e.clientX - r.left, r.width - 185)) + "px";
+  m.style.top = Math.max(4, Math.min(e.clientY - r.top, r.height - 170)) + "px";
+  main.appendChild(m);
+  return m;
+}
+
+function fakeFinderHTML(mainInhalt, ort = "Dokumente") {
+  return `<div class="ff">
+    <div class="ff-titel"><span class="ampel"><span style="background:#E25C4A"></span><span style="background:#E8B93C"></span><span style="background:#5FA860"></span></span>${ort}</div>
+    <div class="ff-body">
+      <div class="ff-seite">Favoriten<br><br>🖥 Schreibtisch<br><br><span class="ff-aktiv">📄 ${ort}</span><br><br>⬇️ Downloads</div>
+      <div class="ff-main">${mainInhalt}</div>
+    </div></div>`;
+}
+
+const UEBUNGEN = {
+  zeigerfeld: {
+    anweisung: "Fahre mit dem Pfeil in das grüne Feld und bleib dort einen Moment stehen.",
+    bau(host, api) {
+      host.innerHTML = `<div class="spiel-buehne" style="height:180px">
+        <div class="ziel-feld" style="right:8%; top:28px; width:132px; height:122px;"><div class="fuell"></div>Hierher!</div>
+      </div>`;
+      host.querySelector(".spiel-buehne").addEventListener("contextmenu", e => e.preventDefault());
+      const ziel = host.querySelector(".ziel-feld");
+      const fuell = host.querySelector(".fuell");
+      let timer = null;
+      ziel.addEventListener("pointerenter", () => {
+        fuell.style.height = "100%";
+        timer = setTimeout(() => api.erfolg("Du hast den Pfeil sicher ins Ziel gesteuert."), 750);
+      });
+      ziel.addEventListener("pointerleave", () => {
+        clearTimeout(timer);
+        fuell.style.height = "0%";
+      });
+    }
+  },
+
+  klickfeld: {
+    anweisung: "Fahre mit dem Pfeil auf den grünen Knopf und drücke das Trackpad einmal kurz herunter.",
+    bau(host, api) {
+      host.innerHTML = `<div class="spiel-buehne" style="height:180px">
+        <button class="spiel-knopf" style="left:calc(50% - 76px); top:60px">Klick mich!</button>
+      </div>`;
+      const buehne = host.querySelector(".spiel-buehne");
+      const knopf = host.querySelector(".spiel-knopf");
+      buehne.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        api.fehler("Das war ein Rechtsklick (zwei Finger). Hier reicht ein ganz normaler Klick mit EINEM Finger.");
+      });
+      buehne.addEventListener("click", e => {
+        if (knopf.contains(e.target)) api.erfolg("Genau so geht ein Klick.");
+        else api.fehler("Fast! Der Pfeil muss genau auf dem grünen Knopf stehen, wenn du drückst.");
+      });
+    }
+  },
+
+  rechtsklickfeld: {
+    anweisung: "Tippe mit ZWEI Fingern gleichzeitig auf die Fläche unten. Und wenn das Menü offen ist: Schließe es mit einem normalen Klick daneben.",
+    bau(host, api) {
+      host.innerHTML = `<div class="spiel-buehne" style="height:210px"></div>`;
+      const buehne = host.querySelector(".spiel-buehne");
+      let menue = null;
+      buehne.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        if (menue) menue.remove();
+        menue = fakeMenue(buehne, e, "<div>Neuer Ordner</div><div>Informationen</div><div>Hintergrund ändern …</div><div>Aufräumen</div>");
+        api.tipp("Sehr gut, das Menü ist offen! Jetzt ein normaler Klick (EIN Finger) auf eine freie Stelle daneben, dann geht es wieder zu.");
+      });
+      buehne.addEventListener("click", () => {
+        if (menue) {
+          menue.remove();
+          menue = null;
+          api.erfolg("Menü mit zwei Fingern geöffnet, mit einem normalen Klick geschlossen. Das ist der ganze Trick!");
+        } else {
+          api.fehler("Das war ein normaler Klick. Tippe mit ZWEI Fingern GLEICHZEITIG. Die Finger dürfen ruhig nebeneinander liegen.");
+        }
+      });
+    }
+  },
+
+  doppelklickfeld: {
+    anweisung: "Öffne den Ordner „Fotos“ mit einem Doppelklick: zweimal schnell hintereinander drücken.",
+    bau(host, api) {
+      host.innerHTML = `<div class="spiel-buehne" style="height:210px">
+        <div class="spiel-objekt" style="left:calc(50% - 39px); top:48px; cursor:default">
+          <div class="obj-bild">📁</div><div class="obj-name">Fotos</div>
+        </div>
+      </div>`;
+      const buehne = host.querySelector(".spiel-buehne");
+      const ordner = host.querySelector(".spiel-objekt");
+      let letzter = 0, timer = null;
+      buehne.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        api.fehler("Das war ein Rechtsklick. Hier brauchst du zwei NORMALE Klicks schnell hintereinander.");
+      });
+      buehne.addEventListener("click", e => {
+        if (!ordner.contains(e.target)) {
+          api.fehler("Geh mit dem Pfeil genau auf den Ordner „Fotos“ und doppelklicke dort.");
+          return;
+        }
+        const jetzt = Date.now();
+        if (jetzt - letzter < 450) {
+          clearTimeout(timer);
+          const fenster = document.createElement("div");
+          fenster.style.cssText = "position:absolute; left:12%; right:12%; top:26px; bottom:22px; background:#fff; border:1.5px solid #C9C4B8; border-radius:10px; box-shadow:0 10px 24px rgba(40,35,20,0.2); padding:10px; text-align:center;";
+          fenster.innerHTML = `<div style="font-size:0.8rem; color:#8A867C; border-bottom:1px solid #EDE8DC; padding-bottom:6px; margin-bottom:10px;">📁 Fotos</div><div style="font-size:2rem">🌻 🐕 👶 🎂</div>`;
+          buehne.appendChild(fenster);
+          api.erfolg("Der Ordner ist aufgegangen. Genau so öffnet man Dinge mit dem Doppelklick.");
+        } else {
+          letzter = jetzt;
+          ordner.classList.add("gewaehlt");
+          timer = setTimeout(() => api.fehler("Das war EIN Klick, der Ordner ist jetzt nur markiert. Für den Doppelklick: zweimal SCHNELL hintereinander, klick-klick."), 550);
+        }
+      });
+    }
+  },
+
+  scrollfeld: {
+    anweisung: "In diesem Kasten steckt ein Brief, der länger ist als der Kasten. Lege zwei Finger aufs Trackpad und streiche, bis du die Blume 🌷 ganz am Ende gefunden hast.",
+    bau(host, api) {
+      host.innerHTML = `<div class="brief-box">
+        <p><strong>Ein kleiner Brief zum Üben</strong></p>
+        <p>Hallo! Schön, dass du hier bist. Dieser Brief hat nur eine Aufgabe: Er ist absichtlich viel zu lang für seinen Kasten.</p>
+        <p>Um weiterzulesen, legst du zwei Finger auf das Trackpad und streichst sanft. Der Text wandert dann mit, wie ein Blatt Papier, das du verschiebst.</p>
+        <p>Siehst du? Es geht schon. Du scrollst gerade.</p>
+        <p>Genau so funktioniert es überall: auf Internetseiten, in E-Mails, in Dokumenten. Wenn etwas nicht ganz auf den Bildschirm passt, scrollst du einfach weiter.</p>
+        <p>Und wenn du zurück nach oben willst: einfach in die andere Richtung streichen.</p>
+        <p>Ein Stück fehlt noch …</p>
+        <p>… gleich hast du es …</p>
+        <p style="font-size:1.6rem; text-align:center">🌷</p>
+        <p style="text-align:center"><strong>Gefunden! Du kannst scrollen.</strong></p>
+      </div>`;
+      const box = host.querySelector(".brief-box");
+      const pruefe = () => {
+        if (box.scrollTop + box.clientHeight >= box.scrollHeight - 6) {
+          api.erfolg("Bis ganz nach unten gescrollt und die Blume gefunden!");
+        }
+      };
+      box.addEventListener("scroll", pruefe);
+      const wache = setInterval(() => {
+        if (!box.isConnected || box.classList.contains("geschafft")) { clearInterval(wache); return; }
+        pruefe();
+      }, 400);
+    }
+  },
+
+  ziehfeld: {
+    anweisung: "Zieh den Apfel in den Korb: draufdrücken, GEDRÜCKT HALTEN und dabei mit dem Finger streichen. Über dem Korb loslassen.",
+    bau(host, api) {
+      host.innerHTML = `<div class="spiel-buehne" style="height:215px">
+        <div class="spiel-objekt" id="sp-apfel" style="left:26px; top:64px"><div class="obj-bild">🍎</div><div class="obj-name">Apfel</div></div>
+        <div class="spiel-ziel" id="sp-korb" style="right:26px; top:56px"><div style="font-size:2.6rem">🧺</div><div style="font-size:0.78rem; color:var(--grey)">Korb</div></div>
+      </div>`;
+      const buehne = host.querySelector(".spiel-buehne");
+      buehne.addEventListener("contextmenu", e => e.preventDefault());
+      machZiehbar(buehne, host.querySelector("#sp-apfel"), host.querySelector("#sp-korb"), api, {
+        erfolgText: "Der Apfel ist im Korb. Festhalten und Ziehen sitzt!",
+        inZiel(el, ziel) { ziel.firstElementChild.textContent = "🧺🍎"; el.remove(); }
+      });
+    }
+  },
+
+  finderneu: {
+    anweisung: "Das hier ist ein Übungs-Finder. Tippe mit ZWEI Fingern auf eine freie weiße Stelle, wähle „Neuer Ordner“, tippe einen Namen und drücke die Enter-Taste (↵).",
+    bau(host, api) {
+      host.innerHTML = fakeFinderHTML(`<div class="spiel-objekt" style="left:18px; top:24px; cursor:default"><div class="obj-bild">📁</div><div class="obj-name">Rezepte</div></div>`);
+      const main = host.querySelector(".ff-main");
+      let menue = null, tippt = false;
+      main.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        if (tippt) return;
+        if (menue) { menue.remove(); menue = null; }
+        if (e.target.closest(".spiel-objekt")) {
+          menue = fakeMenue(main, e, "<div>Öffnen</div><div>Umbenennen</div><div>In den Papierkorb legen</div>");
+          api.fehler("Dein Pfeil stand AUF dem Ordner „Rezepte“, da kommt ein anderes Menü. Probier eine FREIE weiße Stelle.");
+        } else {
+          menue = fakeMenue(main, e, `<div data-akt="neu">Neuer Ordner</div><div>Informationen</div><div>Sortieren nach</div>`);
+        }
+      });
+      main.addEventListener("click", e => {
+        if (tippt) return;
+        if (menue) {
+          const neu = e.target.dataset && e.target.dataset.akt === "neu";
+          menue.remove();
+          menue = null;
+          if (neu) {
+            tippt = true;
+            const o = document.createElement("div");
+            o.className = "spiel-objekt";
+            o.style.cssText = "left:112px; top:24px; cursor:default";
+            o.innerHTML = `<div class="obj-bild">📁</div><input class="obj-eingabe" placeholder="Name tippen">`;
+            main.appendChild(o);
+            const inp = o.querySelector("input");
+            inp.focus();
+            api.tipp("Der Ordner ist da! Tippe jetzt einen Namen (zum Beispiel „Übung“) und drücke die Enter-Taste (↵).");
+            let benannt = false;
+            const bestaetigen = () => {
+              if (benannt) return;
+              benannt = true;
+              const name = (inp.value.trim() || "Neuer Ordner").replace(/</g, "&lt;");
+              o.innerHTML = `<div class="obj-bild">📁</div><div class="obj-name">${name}</div>`;
+              api.erfolg(`Der Ordner „${name}“ ist angelegt: Rechtsklick, „Neuer Ordner“, Name, Enter. Genauso geht es im echten Finder.`);
+            };
+            inp.addEventListener("keydown", ev => {
+              if (ev.key === "Enter" || ev.keyCode === 13) bestaetigen();
+            });
+            inp.addEventListener("blur", () => { if (inp.value.trim()) bestaetigen(); });
+          }
+          return;
+        }
+        if (e.target.closest(".spiel-objekt")) return;
+        api.fehler("Das war ein normaler Klick. Für das Menü: mit ZWEI Fingern gleichzeitig tippen.");
+      });
+    }
+  },
+
+  finderverschieben: {
+    anweisung: "Räum auf: Zieh die Datei „Rezept“ auf den Ordner „Übung“. Lass erst los, wenn der Ordner sich färbt!",
+    bau(host, api) {
+      host.innerHTML = fakeFinderHTML(`
+        <div class="spiel-objekt" id="sp-datei" style="left:18px; top:30px"><div class="obj-bild">📄</div><div class="obj-name">Rezept</div></div>
+        <div class="spiel-ziel" id="sp-ordner" style="right:22px; top:24px"><div style="font-size:2.4rem">📁</div><div style="font-size:0.78rem">Übung</div></div>`);
+      const main = host.querySelector(".ff-main");
+      main.addEventListener("contextmenu", e => e.preventDefault());
+      machZiehbar(main, host.querySelector("#sp-datei"), host.querySelector("#sp-ordner"), api, {
+        erfolgText: "Die Datei „Rezept“ liegt jetzt im Ordner „Übung“. So räumt man am Mac auf!",
+        inZiel(el, ziel) { el.remove(); ziel.lastElementChild.textContent = "Übung (1 Datei)"; }
+      });
+    }
+  },
+
+  finderpapierkorb: {
+    anweisung: "Die Datei „Alt“ braucht niemand mehr. Zieh sie auf den Papierkorb.",
+    bau(host, api) {
+      host.innerHTML = `<div class="spiel-buehne" style="height:215px; background:#EAF1F4;">
+        <div class="spiel-objekt" id="sp-datei" style="left:24px; top:44px"><div class="obj-bild">📄</div><div class="obj-name">Alt</div></div>
+        <div class="spiel-ziel" id="sp-korb" style="right:18px; top:auto; bottom:12px"><div style="font-size:2.5rem">🗑️</div><div style="font-size:0.78rem; color:var(--grey)">Papierkorb</div></div>
+      </div>`;
+      const buehne = host.querySelector(".spiel-buehne");
+      buehne.addEventListener("contextmenu", e => e.preventDefault());
+      machZiehbar(buehne, host.querySelector("#sp-datei"), host.querySelector("#sp-korb"), api, {
+        erfolgText: "„Alt“ liegt im Papierkorb. Und das Beste: Sie wäre noch nicht endgültig weg, du könntest sie jederzeit wieder herausholen.",
+        inZiel(el, ziel) { el.remove(); ziel.firstElementChild.textContent = "🗑️✨"; }
+      });
+    }
+  }
+};
+
+/* Steuert eine Spiel-Übung auf einer Karte.
+   opts: { modus: "lernen"|"ansehen", wiederholung: bool, weiter(urteil) } */
+function starteUebung(karte, opts) {
+  const def = UEBUNGEN[karte.interaktiv];
+  const host = document.getElementById("spielhost");
+  const feedback = document.getElementById("spielfeedback");
+  const ausgang = document.getElementById("spielausgang");
+  document.getElementById("spielanweisung").textContent = def.anweisung;
+  let fehlversuche = 0, fertig = false, ausstiegGezeigt = false;
+
+  function zeigeMeldung(text) {
+    feedback.hidden = false;
+    feedback.innerHTML = `<span>💬</span><span>${text}</span>`;
+  }
+
+  const api = {
+    tipp(text) { if (!fertig) zeigeMeldung(text); },
+    fehler(text) {
+      if (fertig) return;
+      fehlversuche++;
+      zeigeMeldung(text);
+      if (fehlversuche === 2) {
+        const det = document.querySelector("details.hilfe");
+        if (det) det.open = true;
+      }
+      if (fehlversuche >= 4 && opts.modus === "lernen" && !ausstiegGezeigt) {
+        ausstiegGezeigt = true;
+        ausgang.innerHTML = `<div class="spiel-erfolg" style="background:#F6F3EA; border-color:var(--line)">
+          <div class="se-titel" style="color:var(--ink)">Macht überhaupt nichts! 💛</div>
+          <p style="margin:0.4rem 0 0">Die Übung ist knifflig. Du kannst gern weiterprobieren, oder sie kommt morgen einfach nochmal, ganz in Ruhe.</p>
+          <button class="btn-gross" data-akt="morgen">Weiter – morgen nochmal</button>
+        </div>`;
+        ausgang.querySelector('[data-akt="morgen"]').onclick = () => opts.weiter("morgen");
+      }
+    },
+    erfolg(text) {
+      if (fertig) return;
+      fertig = true;
+      feedback.hidden = true;
+      host.innerHTML = `<div class="spiel-geschafft">
+        <div class="sg-haken">✓</div>
+        <div class="sg-text">Perfekt – das hat geklappt!</div>
+      </div>`;
+      if (opts.modus === "ansehen") {
+        ausgang.innerHTML = `<div class="spiel-erfolg"><div class="se-titel">🌟 Geschafft!</div><p style="margin:0.3rem 0 0">${text}</p></div>`;
+      } else if (opts.wiederholung) {
+        const v = vorschau(karte.id, "kann");
+        ausgang.innerHTML = `<div class="spiel-erfolg">
+          <div class="se-titel">🌟 Geschafft!</div>
+          <p style="margin:0.3rem 0 0">${text}</p>
+          <div class="echt-box"><strong>Und jetzt in echt, auf deinem Mac:</strong><br>${karte.uebung}</div>
+          <div class="echt-knoepfe">
+            <button class="b-kann" data-akt="kann">✓ Hat am Mac geklappt<span class="k-sub">dann erst ${abstandText(v.tage)} wieder</span></button>
+            <button class="b-geht" data-akt="geht">Am Mac klappt's noch nicht<span class="k-sub">dann morgen nochmal</span></button>
+          </div>
+          ${srBox(karte.id, false)}
+        </div>`;
+        ausgang.querySelector('[data-akt="kann"]').onclick = () => opts.weiter("kann");
+        ausgang.querySelector('[data-akt="geht"]').onclick = () => opts.weiter("geht");
+      } else {
+        ausgang.innerHTML = `<div class="spiel-erfolg">
+          <div class="se-titel">🌟 Geschafft!</div>
+          <p style="margin:0.3rem 0 0">${text}</p>
+          ${srBox(karte.id)}
+          <button class="btn-gross" data-akt="kann">Weiter</button>
+          <button class="leise" data-akt="geht">Ich bin unsicher – morgen nochmal zeigen</button>
+        </div>`;
+        ausgang.querySelector('[data-akt="kann"]').onclick = () => opts.weiter("kann");
+        ausgang.querySelector('[data-akt="geht"]').onclick = () => opts.weiter("geht");
+      }
+      ausgang.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  };
+  def.bau(host, api);
+}
+
+/* ============================================================
+   Die Themen und Lernkarten
+   ============================================================ */
+const THEMEN = [
+  { id: "maus", name: "Trackpad & Klicken", emoji: "👆" },
+  { id: "schreibtisch", name: "Schreibtisch & Dock", emoji: "🖥️" },
+  { id: "finder", name: "Ordner & Dateien", emoji: "📁" },
+  { id: "internet", name: "Internet & YouTube", emoji: "🌍" },
+  { id: "mail", name: "E-Mail", emoji: "✉️" }
+];
+
+const KARTEN = [
+  {
+    id: "zeiger", thema: "maus", titel: "Der Pfeil auf dem Bildschirm", gfx: "zeiger", interaktiv: "zeigerfeld",
+    text: ["Auf dem Bildschirm siehst du einen kleinen schwarzen Pfeil. Er zeigt, worauf du gerade „zeigst“.",
+      "Du bewegst ihn, indem du mit EINEM Finger sanft über das Trackpad streichst – das ist die glatte Fläche unter der Tastatur. Der Finger muss dabei nicht drücken, nur berühren."],
+    uebung: "Streiche mit einem Finger langsam über das Trackpad und schau dabei auf den Bildschirm. Fahre den Pfeil einmal in jede Ecke: oben links, oben rechts, unten links, unten rechts.",
+    hilfe: ["Wenn du den Pfeil nicht findest: Lass den Finger einfach kurz kreisen, dann siehst du, was sich bewegt.", "Du musst nicht fest aufdrücken. Ganz leichtes Berühren reicht.", "Kommst du am Rand des Trackpads an: Finger kurz anheben und weiter in der Mitte streichen."]
+  },
+  {
+    id: "klick", thema: "maus", titel: "Der Klick", gfx: "klick", interaktiv: "klickfeld",
+    text: ["Ein Klick heißt: „Das da möchte ich!“",
+      "Fahre mit dem Pfeil auf etwas und drücke dann das Trackpad mit einem Finger kurz herunter, bis es leise „klick“ macht. Ein Klick wählt etwas aus oder drückt einen Knopf."],
+    uebung: "Klicke einmal auf eine freie Stelle des Hintergrundbilds. Dann klicke auf ein buntes Symbol unten in der Leiste und schau, was passiert. (Was auch immer aufgeht: Du kannst es oben links am roten Punkt wieder schließen.)",
+    hilfe: ["Wirklich herunterdrücken, bis es klickt – nicht nur berühren.", "Der Pfeil muss auf dem Ding stehen, BEVOR du drückst.", "Es kann nichts kaputtgehen. Jedes Fenster lässt sich wieder schließen."]
+  },
+  {
+    id: "rechtsklick", thema: "maus", titel: "Der Rechtsklick", gfx: "rechtsklick", interaktiv: "rechtsklickfeld",
+    text: ["Der Rechtsklick öffnet ein kleines Menü mit Extra-Möglichkeiten – wie ein Geheimfach. Fast überall ist eins versteckt.",
+      "Auf deinem MacBook geht der Rechtsklick so: Tippe mit ZWEI Fingern gleichzeitig kurz auf das Trackpad."],
+    uebung: "Fahre mit dem Pfeil auf eine freie Stelle des Hintergrundbilds. Tippe dann mit zwei Fingern gleichzeitig auf das Trackpad. Öffnet sich ein kleines Menü? Super! Klicke danach mit EINEM Finger auf eine freie Stelle – das Menü geht wieder zu.",
+    hilfe: ["Beide Finger müssen GLEICHZEITIG tippen, nicht nacheinander.", "Die Finger dürfen ruhig nebeneinander liegen, etwa zwei Zentimeter Abstand.", "Falls es nicht klappt: Es geht auch so – halte die ctrl-Taste (ganz unten links auf der Tastatur) gedrückt und klicke normal mit einem Finger."]
+  },
+  {
+    id: "doppelklick", thema: "maus", titel: "Der Doppelklick", gfx: "doppelklick", interaktiv: "doppelklickfeld",
+    text: ["Der Doppelklick heißt: „Öffne das!“",
+      "Er ist einfach zweimal schnell hintereinander klicken – klick-klick, ohne Pause dazwischen. Mit einem Doppelklick öffnest du zum Beispiel Ordner und Dateien."],
+    uebung: "Liegt ein Ordner oder eine Datei auf deinem Hintergrundbild? Mache einen Doppelklick darauf. Ein Fenster öffnet sich. Schließe es oben links am roten Punkt wieder.",
+    hilfe: ["Die beiden Klicks müssen schnell hintereinander kommen. Wenn nichts passiert: noch etwas schneller.", "Der Pfeil darf zwischen den zwei Klicks nicht verrutschen."]
+  },
+  {
+    id: "scrollen", thema: "maus", titel: "Scrollen: die Seite weiterschieben", gfx: "scrollen", interaktiv: "scrollfeld",
+    text: ["Oft ist eine Seite länger als der Bildschirm. Mit ZWEI Fingern schiebst du sie weiter:",
+      "Lege zwei Finger aufs Trackpad und streiche nach oben oder unten – als würdest du ein Blatt Papier verschieben. Das nennt man Scrollen."],
+    uebung: "Öffne eine Internetseite (zum Beispiel in Chrome) und streiche mit zwei Fingern nach oben und unten. Die Seite bewegt sich mit.",
+    hilfe: ["Beim Scrollen nicht drücken – die zwei Finger nur auflegen und streichen.", "Nichts passiert? Dann ist die Seite vielleicht kurz genug und es gibt nichts zu schieben."]
+  },
+  {
+    id: "ziehen", thema: "maus", titel: "Festhalten und ziehen", gfx: "ziehen", interaktiv: "ziehfeld",
+    text: ["Manche Dinge kann man verschieben. Das geht so:",
+      "Drücke das Trackpad auf dem Ding herunter, HALTE es gedrückt und streiche dabei mit dem Finger. Das Ding wandert mit dem Pfeil mit. Am Ziel lässt du einfach los."],
+    uebung: "Drücke auf ein Symbol auf dem Hintergrundbild, halte gedrückt, ziehe es ein Stück zur Seite und lass los. Es liegt jetzt woanders. Du kannst es genauso wieder zurückziehen.",
+    hilfe: ["Das ist die schwerste Bewegung von allen – Übung macht den Meister!", "Trick für den Anfang: Mit dem Daumen drücken und halten, mit dem Zeigefinger streichen.", "Zu früh losgelassen? Kein Problem, einfach nochmal greifen."]
+  },
+
+  {
+    id: "schreibtisch", thema: "schreibtisch", titel: "Der Schreibtisch", gfx: "schreibtisch",
+    text: ["Was du nach dem Anschalten siehst, heißt Schreibtisch: das große Hintergrundbild.",
+      "Oben ist ein schmaler heller Balken (die Menüleiste), unten die Leiste mit den bunten Symbolen (das Dock). Auf dem Schreibtisch können Dateien und Ordner liegen – wie auf einem echten Schreibtisch."],
+    uebung: "Schau auf deinen Bildschirm und finde alle drei Dinge: das große Hintergrundbild, den schmalen Balken ganz oben, die bunte Symbol-Leiste ganz unten.",
+    hilfe: ["Das Dock versteckt sich manchmal. Schiebe den Pfeil ganz an den unteren Bildschirmrand, dann kommt es hervor.", "Der Schreibtisch ist immer da – er liegt nur manchmal hinter den offenen Fenstern."]
+  },
+  {
+    id: "dock", thema: "schreibtisch", titel: "Das Dock: deine Programmleiste", gfx: "dock",
+    text: ["Die bunte Leiste unten heißt Dock. Jedes Symbol darin ist ein Programm:",
+      "Der bunte Kreis ist Chrome (fürs Internet), der blaue Briefumschlag ist Mail (für E-Mails), das lachende Gesicht ganz links ist der Finder (für deine Dateien).",
+      "Fährst du mit dem Pfeil über ein Symbol, erscheint sein Name."],
+    uebung: "Fahre mit dem Pfeil langsam über die Symbole im Dock – ohne zu klicken – und lies die Namen, die über den Symbolen erscheinen.",
+    hilfe: ["Nur zeigen, nicht drücken! Der Name erscheint von ganz allein nach einem Moment.", "Aus Versehen geklickt und etwas geht auf? Oben links am roten Punkt wieder schließen."]
+  },
+  {
+    id: "programmoeffnen", thema: "schreibtisch", titel: "Ein Programm öffnen", gfx: "programmoeffnen",
+    text: ["Ein einziger Klick auf ein Symbol im Dock öffnet das Programm. Es darf ruhig ein paar Sekunden dauern – der Mac braucht manchmal einen Moment.",
+      "Unter geöffneten Programmen siehst du im Dock einen kleinen Punkt. So erkennst du, was gerade läuft."],
+    uebung: "Klicke im Dock auf Chrome (der bunte Kreis). Warte, bis sich das Fenster öffnet. Schau dann unten ins Dock: Unter dem Chrome-Symbol ist jetzt ein kleiner Punkt.",
+    hilfe: ["Im Dock reicht EIN Klick (kein Doppelklick nötig).", "Nichts passiert? Ein paar Sekunden warten – das Symbol hüpft, während das Programm startet."]
+  },
+  {
+    id: "fensterknoepfe", thema: "schreibtisch", titel: "Die drei Knöpfe am Fenster", gfx: "fensterknoepfe",
+    text: ["Jedes Fenster hat oben links drei kleine runde Knöpfe:",
+      "ROT schließt das Fenster. GELB legt es unsichtbar ins Dock (es ist nicht weg!). GRÜN macht es bildschirmfüllend.",
+      "Aus dem Vollbild kommst du wieder heraus: Pfeil an den oberen Bildschirmrand schieben, warten, wieder auf Grün klicken."],
+    uebung: "Öffne Chrome und probiere: einmal Gelb (das Fenster versteckt sich unten rechts im Dock – klicke es dort wieder an), dann einmal Rot (Fenster zu).",
+    hilfe: ["Die Knöpfe sind klein – geh mit dem Pfeil genau drauf, dann erscheinen ✕, − und Pfeile darin.", "Nach Gelb ist nichts verloren: Das Fenster wartet als kleines Bild rechts im Dock.", "Im Vollbild sind die drei Knöpfe versteckt. Pfeil ganz nach oben schieben, dann kommen sie wieder."]
+  },
+  {
+    id: "beenden", thema: "schreibtisch", titel: "Fenster zu ist nicht Programm aus", gfx: "beenden",
+    text: ["Kleiner Mac-Trick: Wenn du ein Fenster mit Rot schließt, läuft das Programm oft im Hintergrund weiter – der Punkt im Dock bleibt. Das ist überhaupt nicht schlimm und verbraucht kaum etwas.",
+      "Willst du ein Programm trotzdem ganz ausmachen: Rechtsklick (zwei Finger!) auf sein Symbol im Dock, dann im Menü „Beenden“ wählen."],
+    uebung: "Mache einen Zwei-Finger-Tipp auf das Chrome-Symbol im Dock und klicke im Menü auf „Beenden“. Der kleine Punkt darunter verschwindet.",
+    hilfe: ["Du musst Programme NICHT ständig beenden. Der Mac kommt gut damit klar, wenn sie offen bleiben.", "Das Menü ging nicht auf? Dann waren die zwei Finger nicht gleichzeitig – einfach nochmal."]
+  },
+
+  {
+    id: "finder", thema: "finder", titel: "Der Finder: dein Aktenschrank", gfx: "finder",
+    text: ["Das lachende Gesicht ganz links im Dock ist der Finder. Er zeigt dir alles, was auf deinem Mac gespeichert ist.",
+      "Links im Finder-Fenster ist eine Liste der wichtigsten Orte: „Dokumente“ (deine Unterlagen), „Downloads“ (alles aus dem Internet), „Schreibtisch“."],
+    uebung: "Klicke auf das lachende Gesicht ganz links im Dock. Ein Fenster öffnet sich. Klicke links nacheinander auf „Dokumente“ und „Downloads“ und schau, was jeweils drin liegt.",
+    hilfe: ["Kein Fenster aufgegangen? Vielleicht war es schon offen – schau, ob irgendwo ein Finder-Fenster liegt.", "Die linke Liste heißt „Seitenleiste“. Ein Klick auf einen Ort zeigt rechts seinen Inhalt."]
+  },
+  {
+    id: "ordnerneu", thema: "finder", titel: "Einen neuen Ordner anlegen", gfx: "ordnerneu", interaktiv: "finderneu",
+    text: ["Ordner helfen beim Aufräumen – wie Mappen im Aktenschrank.",
+      "So legst du einen an: Rechtsklick (zwei Finger) auf eine freie weiße Stelle im Finder-Fenster, dann im Menü auf „Neuer Ordner“ klicken. Sofort kannst du einen Namen tippen und mit der Enter-Taste (↵) bestätigen."],
+    uebung: "Öffne den Finder, gehe links auf „Dokumente“ und lege mit Rechtsklick → „Neuer Ordner“ einen Ordner an. Nenne ihn „Übung“ und drücke Enter.",
+    hilfe: ["Wichtig: auf eine FREIE Stelle rechtsklicken, nicht auf eine Datei – sonst kommt ein anderes Menü.", "Name vertippt? Einmal auf den Ordnernamen klicken, kurz warten, nochmal klicken – dann kannst du ihn neu tippen.", "Der Ordner heißt „Neuer Ordner“? Dann war die Namenseingabe schon vorbei. Macht nichts – umbenennen geht wie oben."]
+  },
+  {
+    id: "verschieben", thema: "finder", titel: "Eine Datei in einen Ordner legen", gfx: "verschieben", interaktiv: "finderverschieben",
+    text: ["Aufräumen heißt: Dateien in Ordner ziehen.",
+      "Datei anklicken und festhalten, auf den Ordner ziehen (er färbt sich dunkel), loslassen. Die Datei liegt jetzt im Ordner."],
+    uebung: "Ziehe im Finder irgendeine Datei auf deinen Ordner „Übung“ und lass los. Öffne den Ordner mit einem Doppelklick – da ist sie! (Du kannst sie genauso wieder herausziehen.)",
+    hilfe: ["Das ist „Festhalten und ziehen“ aus dem Trackpad-Thema – dieselbe Bewegung.", "Der Ordner muss sich dunkel färben, BEVOR du loslässt. Sonst landet die Datei nur daneben.", "Datei verrutscht? Einfach nochmal greifen und weiterziehen. Es geht nichts verloren."]
+  },
+  {
+    id: "suchen", thema: "finder", titel: "Etwas wiederfinden: die Lupe", gfx: "suchen",
+    text: ["Du weißt nicht mehr, wo etwas ist? Der Mac findet es für dich.",
+      "Ganz oben rechts im Bildschirm ist eine kleine Lupe. Klicke sie an, tippe den Namen – schon erscheint eine Liste mit Treffern. Mit der Enter-Taste öffnest du den ersten Treffer."],
+    uebung: "Klicke oben rechts auf die Lupe und tippe „Übung“. Dein Ordner erscheint in der Liste. Drücke dann die esc-Taste (ganz oben links auf der Tastatur), um die Suche wieder zu schließen.",
+    hilfe: ["Die Suche heißt „Spotlight“. Profis öffnen sie mit den Tasten cmd (⌘) + Leertaste – musst du dir aber nicht merken.", "Die Lupe findet fast alles: Dateien, Programme, sogar Rechenaufgaben (tippe mal 25+17)."]
+  },
+  {
+    id: "papierkorb", thema: "finder", titel: "Der Papierkorb", gfx: "papierkorb", interaktiv: "finderpapierkorb",
+    text: ["Ganz rechts im Dock steht der Papierkorb. Ziehe eine Datei darauf, um sie zu löschen.",
+      "Wie im echten Leben gilt: Sie ist erst dann wirklich weg, wenn der Korb geleert wird. Bis dahin kannst du alles wieder herausholen – Papierkorb anklicken, Datei herausziehen."],
+    uebung: "Ziehe eine Datei, die du nicht mehr brauchst, auf den Papierkorb. Klicke dann auf den Papierkorb und schau hinein: Sie liegt noch drin. Wenn du magst, ziehe sie wieder heraus.",
+    hilfe: ["Du kannst also nichts aus Versehen endgültig löschen – der Papierkorb ist dein Sicherheitsnetz.", "Aus Versehen etwas gelöscht? Papierkorb öffnen, Datei zurückziehen. Fertig."]
+  },
+
+  {
+    id: "chrome", thema: "internet", titel: "Ins Internet gehen", gfx: "chrome",
+    text: ["Fürs Internet benutzt du Google Chrome: der bunte Kreis im Dock. Ein Klick darauf, und ein Fenster öffnet sich – das ist dein Fenster ins Internet.",
+      "(Es gibt auf dem Mac noch ein zweites Internet-Programm: Safari, der blaue Kompass. Beide machen dasselbe – du bleibst einfach bei Chrome.)"],
+    uebung: "Öffne Chrome mit einem Klick auf den bunten Kreis im Dock.",
+    hilfe: ["Chrome ist nicht im Dock? Dann benutze die Lupe oben rechts: „Chrome“ tippen, Enter drücken.", "Internet heißt: dein Mac holt sich Seiten von überall auf der Welt. Dafür muss das WLAN an sein – das ist es zuhause eigentlich immer."]
+  },
+  {
+    id: "adressleiste", thema: "internet", titel: "Die Adressleiste", gfx: "adressleiste",
+    text: ["Ganz oben in Chrome ist ein langes weißes Feld: die Adressleiste.",
+      "Jede Internetseite hat eine Adresse, wie eine Hausadresse – zum Beispiel youtube.com. Klicke ins Feld, tippe die Adresse und drücke die Enter-Taste (↵). Schon bist du dort."],
+    uebung: "Klicke oben in die Adressleiste, tippe wetter.com und drücke Enter. Schon siehst du das Wetter.",
+    hilfe: ["Steht schon Text im Feld? Einfach lostippen – der alte Text verschwindet von selbst, sobald du tippst.", "Kein www. nötig – wetter.com reicht völlig.", "Vertippt? Alles markieren geht mit einem Klick ins Feld, dann einfach neu tippen."]
+  },
+  {
+    id: "googeln", thema: "internet", titel: "Googeln: Fragen ans Internet", gfx: "googeln",
+    text: ["Wenn du keine Adresse weißt, sondern eine Frage hast, tippst du die Frage einfach auch in die Adressleiste – und drückst Enter.",
+      "Google zeigt dir dann eine Liste mit Antworten. Die blauen Überschriften sind anklickbar: Ein Klick darauf öffnet die Seite."],
+    uebung: "Tippe in die Adressleiste: Apfelkuchen Rezept – und drücke Enter. Klicke dann auf ein Ergebnis, das dich anspricht.",
+    hilfe: ["Du kannst Google alles fragen, in ganz normalen Worten: „Wie wird das Wetter morgen“, „Öffnungszeiten Apotheke“.", "Die ersten Treffer sind manchmal Werbung (steht „Gesponsert“ dabei) – die darunter sind oft die besseren."]
+  },
+  {
+    id: "youtube", thema: "internet", titel: "YouTube: Videos schauen", gfx: "youtube",
+    text: ["YouTube ist eine Internetseite voller Videos. Du brauchst dafür kein eigenes Programm – nur Chrome:",
+      "Chrome öffnen, in die Adressleiste youtube.com tippen, Enter drücken. Oben auf der Seite ist ein Suchfeld – dort tippst du, was du sehen möchtest, und drückst wieder Enter."],
+    uebung: "Gehe auf youtube.com und suche etwas, das dich interessiert – zum Beispiel „Gymnastik für den Rücken“. Klicke ein Video an. Es startet von selbst.",
+    hilfe: ["Video anhalten: einmal mitten aufs Video klicken. Weiter geht es mit noch einem Klick.", "Zu leise? Die Lautstärke-Tasten sind oben auf der Tastatur (Lautsprecher-Symbole).", "Nach dem Video schlägt YouTube ähnliche Videos vor – rechts und darunter."]
+  },
+  {
+    id: "zurueck", thema: "internet", titel: "Der Zurück-Pfeil", gfx: "zurueck",
+    text: ["Oben links in Chrome ist ein Pfeil nach links: der Zurück-Knopf. Er bringt dich immer zur Seite davor.",
+      "Das heißt: Du kannst dich im Internet nicht verlaufen. Egal wo du landest – ein paar Klicks auf den Zurück-Pfeil, und du bist wieder da, wo du gestartet bist."],
+    uebung: "Klicke auf irgendeiner Internetseite einen Link an (irgendwas Blaues oder Unterstrichenes). Und dann: Klicke oben links auf den Zurück-Pfeil. Du bist wieder auf der Seite davor.",
+    hilfe: ["Der Pfeil ist ganz oben links, direkt unter dem roten Knopf.", "Ist der Pfeil grau, gibt es nichts zum Zurückgehen – du bist am Anfang.", "Es gibt auch einen Vor-Pfeil daneben, der geht wieder vorwärts."]
+  },
+
+  {
+    id: "mailoeffnen", thema: "mail", titel: "Das Mail-Programm", gfx: "mailoeffnen",
+    text: ["E-Mails liest und schreibst du im Programm Mail: der blaue Briefumschlag im Dock.",
+      "Links siehst du deine Postfächer (wichtig ist der „Eingang“), in der Mitte die Liste deiner E-Mails – die neueste ganz oben. Ungelesene E-Mails haben einen blauen Punkt."],
+    uebung: "Öffne Mail mit einem Klick auf den blauen Briefumschlag im Dock. Zähle: Wie viele E-Mails mit blauem Punkt hast du?",
+    hilfe: ["Beim allerersten Öffnen fragt Mail vielleicht nach deinem E-Mail-Konto – das richtet Julien einmal mit dir ein.", "Der blaue Punkt verschwindet von selbst, sobald du die E-Mail angeklickt und gelesen hast."]
+  },
+  {
+    id: "maillesen", thema: "mail", titel: "Eine E-Mail lesen", gfx: "maillesen",
+    text: ["Ein Klick auf eine E-Mail in der Liste zeigt sie rechts groß an. Ist sie lang, scrollst du mit zwei Fingern nach unten.",
+      "Du musst nichts „zurücklegen“ oder speichern – die E-Mail bleibt einfach in der Liste, auch nachdem du sie gelesen hast."],
+    uebung: "Klicke eine E-Mail in der Liste an und lies sie rechts. Klicke danach eine andere an. Siehst du, wie rechts immer die angeklickte E-Mail steht?",
+    hilfe: ["EIN Klick reicht in der Liste.", "Nichts kann verschwinden: Lesen verändert nichts, es nimmt nur den blauen Punkt weg."]
+  },
+  {
+    id: "antworten", thema: "mail", titel: "Auf eine E-Mail antworten", gfx: "antworten",
+    text: ["Zum Antworten klickst du oben in der Leiste auf den geschwungenen Pfeil nach links – er heißt „Antworten“.",
+      "Ein neues Fenster öffnet sich, Empfänger und Betreff sind schon ausgefüllt. Du tippst nur deine Antwort und klickst dann oben auf das Papierflieger-Symbol: Das heißt Senden."],
+    uebung: "Öffne eine E-Mail (zum Beispiel eine von Julien) und klicke auf den Antworten-Pfeil. Tippe einen kurzen Gruß und sende ihn mit dem Papierflieger ab.",
+    hilfe: ["Der Antworten-Pfeil erscheint oben, sobald eine E-Mail ausgewählt ist.", "Doch nicht senden? Fenster am roten Punkt schließen und „Löschen“ wählen – dann ist nichts passiert.", "Deine Antwort landet automatisch beim richtigen Absender – du musst keine Adresse tippen."]
+  },
+  {
+    id: "mailschreiben", thema: "mail", titel: "Eine neue E-Mail schreiben", gfx: "mailschreiben",
+    text: ["Für eine ganz neue E-Mail klickst du oben in Mail auf das Symbol mit Stift und Blatt. Dann füllst du drei Dinge aus:",
+      "1. „An“: die E-Mail-Adresse des Empfängers. 2. „Betreff“: worum es geht, zum Beispiel „Grüße“. 3. Darunter: deine Nachricht.",
+      "Zum Schluss oben auf den Papierflieger – abgeschickt!"],
+    uebung: "Schreibe Julien eine kurze Test-E-Mail: Stift-und-Blatt-Symbol anklicken, seine Adresse bei „An“ tippen, Betreff „Test“, ein Satz als Nachricht, Papierflieger.",
+    hilfe: ["Bei „An“ hilft Mail mit: Nach den ersten Buchstaben schlägt es bekannte Adressen vor – Vorschlag anklicken, fertig.", "Die E-Mail-Adresse muss genau stimmen (mit @ und allem). Ein Tippfehler, und die Mail kommt zurück.", "Zwischen den Feldern wechselst du mit einem Klick – oder mit der Tab-Taste (⇥, links auf der Tastatur)."]
+  }
+];
+
+/* ============================================================
+   Spaced Repetition
+   ============================================================ */
+/* Version dieser App-Datei. Muss zur "version" in version.json passen –
+   sonst holt sich die App beim Start automatisch die neue Fassung. */
+const VERSION = "2.2.0";
+
+/* Abstand nach der n-ten geschafften Wiederholung: Stufe 1 → morgen, Stufe 2 → 2 Tage, … */
+const PLAN_TAGE = [1, 2, 4, 7, 14, 30, 60];
+const MAX_STUFE = PLAN_TAGE.length;
+const SPEICHER_SCHLUESSEL = "macCoachDaten";
+
+function abstandFuer(stufe) {
+  return PLAN_TAGE[Math.max(1, Math.min(stufe, MAX_STUFE)) - 1];
+}
+function abstandText(tage) {
+  if (tage <= 1) return "morgen";
+  if (tage === 7) return "in einer Woche";
+  if (tage === 14) return "in zwei Wochen";
+  if (tage === 30) return "in einem Monat";
+  if (tage === 60) return "in zwei Monaten";
+  return `in ${tage} Tagen`;
+}
+/* Was passiert bei diesem Urteil? (Vorschau, ohne zu speichern) */
+function vorschau(kartenId, urteil) {
+  const k = daten.karten[kartenId];
+  const stufe = k ? k.stufe : 0;
+  if (urteil !== "kann") return { stufe: 1, tage: 1 };
+  const neu = Math.min(stufe + 1, MAX_STUFE);
+  return { stufe: neu, tage: abstandFuer(neu) };
+}
+function rhythmusLeiste(zielStufe) {
+  const pillen = PLAN_TAGE.map((t, i) => {
+    const nr = i + 1;
+    const klasse = nr < zielStufe ? "r-fertig" : nr === zielStufe ? "r-jetzt" : "";
+    return `<span class="r-pille ${klasse}">${t}</span>`;
+  }).join('<span class="r-tr">›</span>');
+  return `<div class="rhythmus">${pillen}<span class="r-einheit">Tage Abstand</span></div>`;
+}
+/* Erklär-Kasten: wann kommt die Karte wieder und warum wächst der Abstand.
+   mitWann=false, wenn der Termin schon auf den Knöpfen steht (keine Dopplung). */
+function srBox(kartenId, mitWann = true) {
+  const v = vorschau(kartenId, "kann");
+  const kopf = mitWann
+    ? `🔁 Wiederholung: <span class="sr-wann">Diese Übung kommt ${abstandText(v.tage)} wieder.</span>`
+    : `🔁 Dein Rhythmus bei dieser Übung`;
+  const erklaerung = v.stufe < MAX_STUFE
+    ? `Klappt sie dann wieder, wächst der Abstand jedes Mal weiter – bis sie ganz sicher sitzt.`
+    : `Diese Übung sitzt jetzt sicher. Sie kommt nur noch selten zur Auffrischung.`;
+  return `<div class="sr-box">
+    <div class="sr-titel">${kopf}</div>
+    ${rhythmusLeiste(v.stufe)}
+    <p class="sr-erklaerung">${erklaerung}</p>
+  </div>`;
+}
+
+function heuteISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+function tagePlus(iso, tage) {
+  const d = new Date(iso + "T12:00:00");
+  d.setDate(d.getDate() + tage);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+let daten = ladeDaten();
+function ladeDaten() {
+  try {
+    const roh = localStorage.getItem(SPEICHER_SCHLUESSEL);
+    if (roh) {
+      const d = JSON.parse(roh);
+      d.karten = d.karten || {};
+      d.tage = d.tage || [];
+      d.fragen = d.fragen || [];
+      return d;
+    }
+  } catch (e) { /* kaputte Daten → frisch anfangen */ }
+  return { version: 1, name: "", neuProTag: 3, karten: {}, tage: [], fragen: [], gesehenVersion: "" };
+}
+function speichern() {
+  try { localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify(daten)); } catch (e) {}
+}
+
+function kartenStatus(id) {
+  const k = daten.karten[id];
+  if (!k) return "neu";
+  if (k.stufe >= 4) return "sicher";
+  return "lernen";
+}
+function statusText(s) {
+  return s === "neu" ? "✨ neu" : s === "sicher" ? "✓ sitzt" : "🌱 am Lernen";
+}
+
+/* Heutige Lernrunde zusammenstellen */
+function baueRunde() {
+  const heute = heuteISO();
+  const faellig = KARTEN.filter(k => {
+    const d = daten.karten[k.id];
+    return d && d.faellig <= heute;
+  });
+  const heuteSchonNeu = KARTEN.filter(k => daten.karten[k.id] && daten.karten[k.id].start === heute).length;
+  const neue = KARTEN.filter(k => !daten.karten[k.id]).slice(0, Math.max(0, daten.neuProTag - heuteSchonNeu));
+  return [...faellig, ...neue].slice(0, 12);
+}
+
+function bewerte(id, urteil) {
+  const heute = heuteISO();
+  let k = daten.karten[id] || { stufe: 0, faellig: heute, gesehen: 0, start: heute };
+  k.gesehen = (k.gesehen || 0) + 1;
+  if (urteil === "nochmal") {
+    k.stufe = 0;
+    k.faellig = heute;
+  } else if (urteil === "geht") {
+    k.stufe = Math.max(0, Math.min(k.stufe, 1));
+    k.faellig = tagePlus(heute, 1);
+  } else if (urteil === "morgen") {
+    k.stufe = 0;
+    k.faellig = tagePlus(heute, 1);
+  } else {
+    k.stufe = Math.min(k.stufe + 1, MAX_STUFE);
+    k.faellig = tagePlus(heute, abstandFuer(k.stufe));
+  }
+  daten.karten[id] = k;
+  speichern();
+}
+
+function streakZaehlen() {
+  const tage = [...new Set(daten.tage)].sort().reverse();
+  if (!tage.length) return 0;
+  let s = 0, erwartet = heuteISO();
+  if (tage[0] !== erwartet) erwartet = tagePlus(erwartet, -1);
+  for (const t of tage) {
+    if (t === erwartet) { s++; erwartet = tagePlus(erwartet, -1); }
+    else break;
+  }
+  return s;
+}
+
+/* ============================================================
+   Ansichten
+   ============================================================ */
+const app = document.getElementById("app");
+let runde = [];
+let rundePos = 0;
+let rundeGesamt = 0;
+let aufStartseite = false;
+let neuHinweis = "";
+
+/* Holt version.json und lädt die App einmal neu, wenn eine neuere Fassung
+   veröffentlicht wurde. Ohne Internet passiert einfach nichts. */
+async function pruefeUpdate() {
+  let info;
+  try {
+    const antwort = await fetch("version.json?t=" + new Date().getTime(), { cache: "no-store" });
+    if (!antwort.ok) return;
+    info = await antwort.json();
+  } catch (e) {
+    return;   // offline oder als lokale Datei geöffnet – kein Problem
+  }
+  if (!info || !info.version) return;
+
+  if (info.version !== VERSION) {
+    const marke = "macCoachNeuladen:" + info.version;
+    if (!sessionStorage.getItem(marke)) {
+      sessionStorage.setItem(marke, "1");   // schützt vor Neulade-Schleife
+      location.replace(location.pathname + "?v=" + encodeURIComponent(info.version));
+    }
+    return;
+  }
+  if (info.neu && daten.gesehenVersion !== info.version) {
+    neuHinweis = String(info.neu);
+    if (aufStartseite) zeigeStart();
+  }
+}
+
+function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+
+function zeigeStart() {
+  aufStartseite = true;
+  const stunde = new Date().getHours();
+  const gruss = stunde < 11 ? "Guten Morgen" : stunde < 18 ? "Guten Tag" : "Guten Abend";
+  const name = daten.name ? `, ${esc(daten.name)}` : "";
+  const anstehend = baueRunde();
+  const streak = streakZaehlen();
+
+  const themenHTML = THEMEN.map(t => {
+    const karten = KARTEN.filter(k => k.thema === t.id);
+    const sicher = karten.filter(k => kartenStatus(k.id) === "sicher").length;
+    const begonnen = karten.filter(k => kartenStatus(k.id) !== "neu").length;
+    const pct = Math.round((sicher / karten.length) * 100);
+    return `<button class="thema-zeile" data-thema="${t.id}">
+      <span class="t-emoji">${t.emoji}</span>
+      <span class="t-mitte">
+        <span class="t-name">${t.name}</span>
+        <span class="mini-balken"><div style="width:${pct}%"></div></span>
+      </span>
+      <span class="t-stand">${sicher} von ${karten.length}<br>sitzen${begonnen === 0 ? "" : ""}</span>
+    </button>`;
+  }).join("");
+
+  app.innerHTML = `
+    <div class="kopf">
+      <span class="logo">🧭 Mac-Coach</span>
+      <button data-akt="einstellungen" title="Einstellungen">⚙️</button>
+    </div>
+    <div class="gruss">
+      <h1>${gruss}${name}! ☀️</h1>
+      <div class="unter">Schön, dass du da bist.</div>
+      ${streak >= 2 ? `<div class="streak">🔥 ${streak} Tage hintereinander geübt!</div>` : ""}
+    </div>
+    ${anstehend.length
+      ? `<button class="btn-gross" data-akt="start">▶ &nbsp;Jetzt üben &nbsp;·&nbsp; ${anstehend.length} ${anstehend.length === 1 ? "Karte" : "Karten"}</button>`
+      : `<div class="karte-box" style="text-align:center">
+           <div style="font-size:2.2rem">🎉</div>
+           <p style="margin:0.4rem 0 0"><strong>Für heute ist alles erledigt!</strong></p>
+           <p style="color:var(--grey); margin:0.3rem 0 0">Komm morgen einfach wieder – dann warten die nächsten Wiederholungen auf dich.</p>
+         </div>`}
+    ${neuHinweis ? `<div class="neu-banner">
+      <div class="nb-titel">✨ Es ist etwas Neues dazugekommen</div>
+      <p>${esc(neuHinweis)}</p>
+      <button data-akt="neu-ok">Alles klar, danke</button>
+    </div>` : ""}
+    <div class="themen-liste">
+      <h3>Zum Nachschauen: alle Themen</h3>
+      ${themenHTML}
+    </div>
+    <div class="fuss">Mac-Coach · Version ${VERSION}</div>`;
+
+  const neuOk = app.querySelector('[data-akt="neu-ok"]');
+  if (neuOk) neuOk.onclick = () => {
+    daten.gesehenVersion = VERSION;
+    speichern();
+    neuHinweis = "";
+    zeigeStart();
+  };
+  app.querySelector('[data-akt="einstellungen"]').onclick = zeigeEinstellungen;
+  const startBtn = app.querySelector('[data-akt="start"]');
+  if (startBtn) startBtn.onclick = () => {
+    runde = baueRunde();
+    rundePos = 0;
+    rundeGesamt = runde.length;
+    zeigeKarte();
+  };
+  app.querySelectorAll("[data-thema]").forEach(b => b.onclick = () => zeigeThema(b.dataset.thema));
+}
+
+function kartenInhalt(karte) {
+  const thema = THEMEN.find(t => t.id === karte.thema);
+  const gefragt = daten.fragen.includes(karte.id);
+  const ohneGfx = karte.interaktiv && karte.interaktiv.startsWith("finder");
+  const uebungsBlock = karte.interaktiv
+    ? `<div class="uebung">
+        <div class="u-titel">🖐 Jetzt du – probier es hier im Übungsfeld:</div>
+        <p class="spiel-anweisung" id="spielanweisung"></p>
+        <div id="spielhost"></div>
+        <div id="spielfeedback" class="spiel-feedback" hidden></div>
+      </div>`
+    : `<div class="uebung">
+        <div class="u-titel">🖐 Jetzt du – probiere es gleich aus:</div>
+        <p>${karte.uebung}</p>
+      </div>`;
+  return `
+    <span class="chip">${thema.emoji} ${thema.name}</span>
+    <h2>${karte.titel}</h2>
+    ${ohneGfx ? "" : `<div class="gfx">${GRAFIKEN[karte.gfx]()}</div>`}
+    ${karte.text.map(a => `<p>${a}</p>`).join("")}
+    ${uebungsBlock}
+    <details class="hilfe">
+      <summary>💡 Mehr Hilfe zu diesem Thema</summary>
+      <div class="hilfe-inhalt"><ul>${karte.hilfe.map(h => `<li>${h}</li>`).join("")}</ul></div>
+    </details>
+    <div class="frage-zeile">
+      <button data-akt="frage" class="${gefragt ? "markiert" : ""}">${gefragt ? "✓ Für Julien gemerkt – ihr schaut es zusammen an" : "🤔 Das möchte ich Julien fragen"}</button>
+    </div>
+    <div id="spielausgang"></div>`;
+}
+
+function frageUmschalten(karte, btn) {
+  const i = daten.fragen.indexOf(karte.id);
+  if (i >= 0) daten.fragen.splice(i, 1); else daten.fragen.push(karte.id);
+  speichern();
+  const an = daten.fragen.includes(karte.id);
+  btn.textContent = an ? "✓ Für Julien gemerkt – ihr schaut es zusammen an" : "🤔 Das möchte ich Julien fragen";
+  btn.classList.toggle("markiert", an);
+}
+
+function zeigeKarte() {
+  aufStartseite = false;
+  if (rundePos >= runde.length) { zeigeFertig(); return; }
+  const karte = runde[rundePos];
+  const pct = Math.round((rundePos / rundeGesamt) * 100);
+
+  const wiederholung = !!daten.karten[karte.id];
+  app.innerHTML = `
+    <div class="session-kopf">
+      <span class="zaehler">Karte ${Math.min(rundePos + 1, rundeGesamt)} von ${rundeGesamt}</span>
+      <div class="fortschritt-leiste"><div style="width:${pct}%"></div></div>
+      <button class="pause" data-akt="pause">Pause</button>
+    </div>
+    <div class="karte-box">
+      ${kartenInhalt(karte)}
+      ${karte.interaktiv ? "" : `
+      <div class="bewertung">
+        <button class="b-nochmal" data-urteil="nochmal"><span class="emo">😅</span>Zeig's mir<br>gleich nochmal</button>
+        <button class="b-geht" data-urteil="geht"><span class="emo">🙂</span>Geht so –<br>morgen wieder</button>
+        <button class="b-kann" data-urteil="kann"><span class="emo">😄</span>Kann ich!<span class="k-sub">${abstandText(vorschau(karte.id, "kann").tage)} wieder</span></button>
+      </div>
+      <div class="sr-hinweis">🔁 Jede Karte kommt wieder – erst morgen, dann in 2 Tagen, 4 Tagen, einer Woche … immer seltener, bis sie sicher sitzt.</div>`}
+    </div>`;
+  window.scrollTo(0, 0);
+
+  app.querySelector('[data-akt="pause"]').onclick = zeigeStart;
+  app.querySelector('[data-akt="frage"]').onclick = e => frageUmschalten(karte, e.target);
+  const weiter = urteil => {
+    bewerte(karte.id, urteil);
+    if (urteil === "nochmal") {
+      runde.push(karte);          // kommt am Ende der Runde noch einmal
+      rundeGesamt = runde.length;
+    }
+    rundePos++;
+    zeigeKarte();
+  };
+  if (karte.interaktiv) {
+    starteUebung(karte, { modus: "lernen", wiederholung, weiter });
+  } else {
+    app.querySelectorAll("[data-urteil]").forEach(b => b.onclick = () => weiter(b.dataset.urteil));
+  }
+}
+
+function zeigeFertig() {
+  aufStartseite = false;
+  const heute = heuteISO();
+  if (!daten.tage.includes(heute)) { daten.tage.push(heute); speichern(); }
+  const streak = streakZaehlen();
+  app.innerHTML = `
+    <div class="karte-box fertig-box">
+      <div class="gross-emoji">🌟</div>
+      <h2>Geschafft – fertig für heute!</h2>
+      <p style="margin-top:0.5rem">Du hast ${rundeGesamt} ${rundeGesamt === 1 ? "Karte" : "Karten"} geübt.</p>
+      ${streak >= 2 ? `<div class="streak">🔥 ${streak} Tage hintereinander!</div>` : ""}
+      <p style="margin-top:1rem">Morgen warten die nächsten Wiederholungen auf dich. Bis dann!</p>
+      <button class="btn-gross" style="margin-top:1.2rem" data-akt="heim">Zur Startseite</button>
+    </div>`;
+  app.querySelector('[data-akt="heim"]').onclick = zeigeStart;
+}
+
+function zeigeThema(themaId) {
+  aufStartseite = false;
+  const thema = THEMEN.find(t => t.id === themaId);
+  const karten = KARTEN.filter(k => k.thema === themaId);
+  app.innerHTML = `
+    <div class="zurueck-leiste"><button data-akt="heim">← Zurück zur Startseite</button></div>
+    <h2>${thema.emoji} ${thema.name}</h2>
+    <p style="color:var(--grey); font-size:0.95rem; margin:0.3rem 0 1rem">Zum Nachschauen: Klicke eine Karte an, um sie noch einmal zu lesen.</p>
+    <div class="karten-liste">
+      ${karten.map(k => {
+        const s = kartenStatus(k.id);
+        return `<button data-karte="${k.id}"><span>${k.titel}</span><span class="status s-${s}">${statusText(s)}</span></button>`;
+      }).join("")}
+    </div>`;
+  app.querySelector('[data-akt="heim"]').onclick = zeigeStart;
+  app.querySelectorAll("[data-karte]").forEach(b => b.onclick = () => zeigeEinzelkarte(b.dataset.karte, themaId));
+}
+
+function zeigeEinzelkarte(kartenId, themaId) {
+  aufStartseite = false;
+  const karte = KARTEN.find(k => k.id === kartenId);
+  app.innerHTML = `
+    <div class="zurueck-leiste"><button data-akt="zurueck">← Zurück zur Themenliste</button></div>
+    <div class="karte-box">
+      ${kartenInhalt(karte)}
+      <button class="btn-zart" style="margin-top:1.2rem" data-akt="zurueck2">Alles klar – zurück</button>
+    </div>`;
+  window.scrollTo(0, 0);
+  app.querySelector('[data-akt="frage"]').onclick = e => frageUmschalten(karte, e.target);
+  app.querySelectorAll('[data-akt="zurueck"], [data-akt="zurueck2"]').forEach(b => b.onclick = () => zeigeThema(themaId));
+  if (karte.interaktiv) starteUebung(karte, { modus: "ansehen" });
+}
+
+function zeigeEinstellungen() {
+  aufStartseite = false;
+  const fragenKarten = daten.fragen.map(id => KARTEN.find(k => k.id === id)).filter(Boolean);
+  app.innerHTML = `
+    <div class="zurueck-leiste"><button data-akt="heim">← Zurück zur Startseite</button></div>
+    <h2>⚙️ Einstellungen</h2>
+    <div class="karte-box einstellungen">
+      <label for="e-name">Vorname (für die Begrüßung)</label>
+      <input type="text" id="e-name" value="${esc(daten.name || "")}" placeholder="z.B. Heike">
+      <label for="e-neu">Neue Themen pro Tag</label>
+      <select id="e-neu">
+        ${[1, 2, 3, 4, 5].map(n => `<option value="${n}" ${daten.neuProTag === n ? "selected" : ""}>${n} ${n === 1 ? "neues Thema" : "neue Themen"}</option>`).join("")}
+      </select>
+      <div class="klein">Wiederholungen kommen immer dazu – das hier steuert nur, wie viel Neues täglich dazukommt.</div>
+
+      <div class="block">
+        <label>Fragen an Julien</label>
+        ${fragenKarten.length
+          ? `<ul class="fragen-liste">${fragenKarten.map(k => `<li>${k.titel}</li>`).join("")}</ul>
+             <div class="klein">Diese Themen wurden mit „Das möchte ich Julien fragen“ markiert.</div>`
+          : `<div class="klein">Noch keine – Fragen lassen sich auf jeder Karte unten markieren.</div>`}
+      </div>
+
+      <div class="block">
+        <label>Für Julien: Speicherstand sichern</label>
+        <button class="btn-zart" data-akt="export" style="margin-bottom:0.5rem">⬇ Sicherung herunterladen</button>
+        <button class="btn-zart" data-akt="import">⬆ Sicherung einspielen</button>
+        <input type="file" id="e-datei" accept=".json" style="display:none">
+        <div class="klein">Der Lernstand liegt im Browser dieses Macs. Die Sicherung ist eine kleine Datei zum Aufheben oder Umziehen.</div>
+      </div>
+
+      <div class="block" id="reset-block">
+        <button class="btn-zart" data-akt="reset" style="color:var(--red); border-color:#E8C4BD">Alles zurücksetzen …</button>
+      </div>
+    </div>`;
+
+  app.querySelector('[data-akt="heim"]').onclick = () => {
+    daten.name = app.querySelector("#e-name").value.trim();
+    daten.neuProTag = parseInt(app.querySelector("#e-neu").value, 10);
+    speichern();
+    zeigeStart();
+  };
+  app.querySelector('[data-akt="export"]').onclick = () => {
+    daten.name = app.querySelector("#e-name").value.trim();
+    speichern();
+    const blob = new Blob([JSON.stringify(daten, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `mac-coach-sicherung-${heuteISO()}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+  app.querySelector('[data-akt="import"]').onclick = () => app.querySelector("#e-datei").click();
+  app.querySelector("#e-datei").onchange = e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const leser = new FileReader();
+    leser.onload = () => {
+      try {
+        const neu = JSON.parse(leser.result);
+        if (!neu || typeof neu.karten !== "object") throw new Error("format");
+        daten = { version: 1, name: "", neuProTag: 3, karten: {}, tage: [], fragen: [], ...neu };
+        speichern();
+        zeigeEinstellungen();
+      } catch (err) {
+        alert("Diese Datei ist leider keine Mac-Coach-Sicherung.");
+      }
+    };
+    leser.readAsText(f);
+  };
+  app.querySelector('[data-akt="reset"]').onclick = () => {
+    const block = app.querySelector("#reset-block");
+    block.innerHTML = `
+      <label style="color:var(--red)">Wirklich den ganzen Lernstand löschen?</label>
+      <div style="display:flex; gap:0.6rem; margin-top:0.4rem">
+        <button class="btn-zart" data-akt="reset-ja" style="color:var(--red); border-color:#E8C4BD">Ja, alles löschen</button>
+        <button class="btn-zart" data-akt="reset-nein">Nein, behalten</button>
+      </div>`;
+    block.querySelector('[data-akt="reset-ja"]').onclick = () => {
+      daten = { version: 1, name: daten.name, neuProTag: 3, karten: {}, tage: [], fragen: [] };
+      speichern();
+      zeigeEinstellungen();
+    };
+    block.querySelector('[data-akt="reset-nein"]').onclick = zeigeEinstellungen;
+  };
+}
+
+zeigeStart();
+pruefeUpdate();
+</script>
+</body>
+</html>
