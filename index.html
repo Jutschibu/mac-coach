@@ -1630,7 +1630,7 @@ const KARTEN = [
    ============================================================ */
 /* Version dieser App-Datei. Muss zur "version" in version.json passen –
    sonst holt sich die App beim Start automatisch die neue Fassung. */
-const VERSION = "2.2.0";
+const VERSION = "2.3.0";
 
 /* Abstand nach der n-ten geschafften Wiederholung: Stufe 1 → morgen, Stufe 2 → 2 Tage, … */
 const PLAN_TAGE = [1, 2, 4, 7, 14, 30, 60];
@@ -1795,7 +1795,8 @@ async function pruefeUpdate() {
     }
     return;
   }
-  if (info.neu && daten.gesehenVersion !== info.version) {
+  // Hinweis nur für jemanden, der schon geübt hat – beim ersten Start ist nichts "neu"
+  if (info.neu && daten.gesehenVersion !== info.version && (daten.tage || []).length > 0) {
     neuHinweis = String(info.neu);
     if (aufStartseite) zeigeStart();
   }
