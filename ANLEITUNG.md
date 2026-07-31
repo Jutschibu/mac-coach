@@ -1,6 +1,6 @@
 # Mac-Coach – Anleitung für Julien
 
-Ein Spaced-Repetition-Lernsystem, mit dem Mama den Umgang mit ihrem MacBook Air lernt: 25 Karten in 5 Themen, davon 9 mit interaktiven Übungen, die echte Aktionen erkennen (Klick, Rechtsklick, Doppelklick, Scrollen, Ziehen, Fake-Finder).
+Ein Spaced-Repetition-Lernsystem, mit dem Mama den Umgang mit ihrem MacBook Air lernt: 30 Karten in 6 Themen, davon 9 mit interaktiven Übungen, die echte Aktionen erkennen (Klick, Rechtsklick, Doppelklick, Scrollen, Ziehen, Fake-Finder).
 
 **Live:** https://jutschibu.github.io/mac-coach/
 **Quelle:** `~/Documents/Claude/Mac-Coach/` (Git-Repo, GitHub: `Jutschibu/mac-coach`, öffentlich)

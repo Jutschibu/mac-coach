@@ -227,9 +227,11 @@
   .thema-zeile:hover { border-color: var(--teal); }
   .thema-zeile .t-emoji { font-size: 1.5rem; }
   .thema-zeile .t-name { font-weight: 600; flex: 1; }
-  .thema-zeile .t-stand { font-size: 0.82rem; color: var(--grey); }
-  .thema-zeile .mini-balken { width: 100%; height: 7px; background: #EDE8DC; border-radius: 999px; margin-top: 0.3rem; overflow: hidden; }
-  .thema-zeile .mini-balken > div { height: 100%; background: var(--teal); border-radius: 999px; }
+  .thema-zeile .t-stand { font-size: 0.82rem; color: var(--grey); text-align: right; }
+  .thema-zeile .t-lernen { color: var(--teal); font-weight: 600; }
+  .thema-zeile .mini-balken { display: flex; width: 100%; height: 7px; background: #EDE8DC; border-radius: 999px; margin-top: 0.3rem; overflow: hidden; }
+  .thema-zeile .mini-balken > div { height: 100%; background: var(--teal); }
+  .thema-zeile .mini-balken > .ml-lernen { background: #A8CFC5; }
   .thema-zeile .t-mitte { flex: 1; }
 
   .karten-liste button {
@@ -1049,6 +1051,116 @@ function gMailSchreiben() {
     <text x="76" y="206" font-size="14" fill="${F.ink}">Liebe Grüße, Mama</text>`, 240);
 }
 
+/* --- Zoom: Kacheln, Knopfleiste, Fenster --- */
+function zoomKachel(x, y, b, h, name, kameraAus = false) {
+  const person = kameraAus
+    ? `<circle cx="${x + b / 2}" cy="${y + h / 2 - 2}" r="17" fill="#4A5A66"/>
+       <text x="${x + b / 2}" y="${y + h / 2 + 4}" text-anchor="middle" font-size="15" fill="#DCE5EA" font-weight="700">${name.slice(0, 1)}</text>`
+    : `<circle cx="${x + b / 2}" cy="${y + h / 2 - 10}" r="12" fill="#E7C9A6"/>
+       <path d="M${x + b / 2 - 20},${y + h - 6} q20,-24 40,0 z" fill="#5FA860"/>`;
+  return `<rect x="${x}" y="${y}" width="${b}" height="${h}" rx="8" fill="#2B3A44"/>
+    ${person}
+    <rect x="${x + 6}" y="${y + h - 20}" width="${name.length * 7 + 12}" height="15" rx="4" fill="#000" opacity="0.45"/>
+    <text x="${x + 12}" y="${y + h - 9}" font-size="11" fill="#fff">${name}</text>`;
+}
+
+/* Knopfleiste unten im Zoom-Fenster. hervor: "ton" | "bild" | "verlassen" */
+function zoomLeiste(x, y, b, hervor = "", tonAus = false, bildAus = false) {
+  const mx = x + 42, vx = x + 116, lx = x + b - 86;
+  const strich = cx => `<line x1="${cx - 14}" y1="${y + 7}" x2="${cx + 14}" y2="${y + 31}" stroke="${F.rot}" stroke-width="3.5" stroke-linecap="round"/>`;
+  const markiert = (cx, w) => `<rect x="${cx - w / 2}" y="${y + 2}" width="${w}" height="38" rx="9" fill="none" stroke="${F.amber}" stroke-width="3"/>`;
+  return `<rect x="${x}" y="${y}" width="${b}" height="42" rx="10" fill="#1F2B33"/>
+    <rect x="${mx - 4}" y="${y + 8}" width="8" height="13" rx="4" fill="#fff"/>
+    <path d="M${mx - 7},${y + 20} a7,7 0 0 0 14,0" fill="none" stroke="#fff" stroke-width="2"/>
+    <line x1="${mx}" y1="${y + 26}" x2="${mx}" y2="${y + 29}" stroke="#fff" stroke-width="2"/>
+    <text x="${mx}" y="${y + 39}" text-anchor="middle" font-size="9" fill="#C8D2D8">Ton</text>
+    ${tonAus ? strich(mx) : ""}
+    <rect x="${vx - 14}" y="${y + 11}" width="20" height="15" rx="3" fill="#fff"/>
+    <path d="M${vx + 7},${y + 18.5} L${vx + 16},${y + 12} L${vx + 16},${y + 25} Z" fill="#fff"/>
+    <text x="${vx}" y="${y + 39}" text-anchor="middle" font-size="9" fill="#C8D2D8">Bild</text>
+    ${bildAus ? strich(vx) : ""}
+    <rect x="${lx}" y="${y + 9}" width="74" height="24" rx="12" fill="${F.rot}"/>
+    <text x="${lx + 37}" y="${y + 26}" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">Verlassen</text>
+    ${hervor === "ton" ? markiert(mx, 56) : ""}
+    ${hervor === "bild" ? markiert(vx, 56) : ""}
+    ${hervor === "verlassen" ? markiert(lx + 37, 86) : ""}`;
+}
+
+function zoomFenster(inhalt, hervor = "", tonAus = false, bildAus = false) {
+  return `<rect x="40" y="16" width="360" height="196" rx="10" fill="#16212A" stroke="${F.linie}" stroke-width="2"/>
+    <rect x="40" y="16" width="360" height="26" rx="10" fill="#F1EEE6"/>
+    <rect x="40" y="30" width="360" height="12" fill="#F1EEE6"/>
+    <circle cx="56" cy="29" r="5" fill="${F.rot}"/><circle cx="72" cy="29" r="5" fill="${F.gelb}"/><circle cx="88" cy="29" r="5" fill="${F.gruen}"/>
+    <text x="220" y="34" text-anchor="middle" font-size="12" fill="${F.grau}" font-weight="600">Zoom</text>
+    ${inhalt}
+    ${zoomLeiste(52, 158, 336, hervor, tonAus, bildAus)}`;
+}
+
+function zoomSymbol(x, y, g = 52) {
+  return `<rect x="${x}" y="${y}" width="${g}" height="${g}" rx="${g / 4.5}" fill="#2D8CFF"/>
+    <rect x="${x + g * 0.2}" y="${y + g * 0.33}" width="${g * 0.4}" height="${g * 0.34}" rx="5" fill="#fff"/>
+    <path d="M${x + g * 0.62},${y + g * 0.5} L${x + g * 0.82},${y + g * 0.36} L${x + g * 0.82},${y + g * 0.64} Z" fill="#fff"/>`;
+}
+
+function gZoomStart() {
+  return sv(`
+    ${zoomFenster(`
+      ${zoomKachel(62, 54, 152, 96, "Julien")}
+      ${zoomKachel(226, 54, 152, 96, "Du")}
+    `)}
+    <text x="220" y="240" text-anchor="middle" font-size="14" fill="${F.grau}">Ihr seht und hört euch – wie ein Telefonat mit Bild</text>`, 250);
+}
+
+function gZoomBeitreten() {
+  return sv(`
+    <rect x="30" y="16" width="230" height="96" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <rect x="30" y="16" width="230" height="24" rx="10" fill="#F1EEE6"/>
+    <rect x="30" y="30" width="230" height="10" fill="#F1EEE6"/>
+    <circle cx="46" cy="28" r="4.5" fill="${F.rot}"/><circle cx="60" cy="28" r="4.5" fill="${F.gelb}"/><circle cx="74" cy="28" r="4.5" fill="${F.gruen}"/>
+    <text x="46" y="60" font-size="13" fill="${F.ink}">Julien lädt dich ein:</text>
+    <text x="46" y="84" font-size="13" fill="#1A0DAB" text-decoration="underline" font-weight="600">zoom.us/j/812 4455 90</text>
+    <text x="46" y="102" font-size="11" fill="${F.grau}">← dieser blaue Text ist der Link</text>
+    ${pfeil(268, 64, 322, 64, F.amber, 5)}
+    <text x="295" y="52" text-anchor="middle" font-size="12" fill="#8A5E14" font-weight="600">1 Klick</text>
+    ${zoomSymbol(330, 38, 58)}
+    <text x="359" y="118" text-anchor="middle" font-size="12" fill="${F.grau}">Zoom geht auf</text>
+    <rect x="90" y="140" width="260" height="76" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <text x="220" y="166" text-anchor="middle" font-size="13" fill="${F.ink}">Zoom fragt vielleicht noch:</text>
+    <rect x="132" y="178" width="176" height="28" rx="14" fill="#2D8CFF"/>
+    <text x="220" y="197" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">Mit Video beitreten</text>
+    <text x="220" y="236" text-anchor="middle" font-size="14" fill="${F.grau}">→ auf den blauen Knopf klicken, fertig</text>`, 246);
+}
+
+function gZoomTon() {
+  return sv(`
+    ${zoomFenster(`
+      ${zoomKachel(62, 54, 152, 96, "Julien")}
+      ${zoomKachel(226, 54, 152, 96, "Du")}
+    `, "ton", true)}
+    ${pfeil(120, 250, 96, 208, F.amber)}
+    <text x="128" y="252" font-size="13" fill="#8A5E14" font-weight="600">roter Strich = dich hört gerade niemand</text>`, 262);
+}
+
+function gZoomBild() {
+  return sv(`
+    ${zoomFenster(`
+      ${zoomKachel(62, 54, 152, 96, "Julien")}
+      ${zoomKachel(226, 54, 152, 96, "Du", true)}
+    `, "bild", false, true)}
+    ${pfeil(196, 250, 170, 208, F.amber)}
+    <text x="204" y="252" font-size="13" fill="#8A5E14" font-weight="600">Kamera aus → statt Bild nur dein Name</text>`, 262);
+}
+
+function gZoomVerlassen() {
+  return sv(`
+    ${zoomFenster(`
+      ${zoomKachel(62, 54, 152, 96, "Julien")}
+      ${zoomKachel(226, 54, 152, 96, "Du")}
+    `, "verlassen")}
+    ${pfeil(330, 250, 350, 208, F.amber)}
+    <text x="322" y="252" text-anchor="end" font-size="13" fill="#8A5E14" font-weight="600">roter Knopf unten rechts: Meeting verlassen</text>`, 262);
+}
+
 const GRAFIKEN = {
   zeiger: gZeiger, klick: gKlick, rechtsklick: gRechtsklick, doppelklick: gDoppelklick,
   scrollen: gScrollen, ziehen: gZiehen, schreibtisch: gSchreibtisch, dock: gDock,
@@ -1056,7 +1168,9 @@ const GRAFIKEN = {
   finder: gFinder, ordnerneu: gOrdnerNeu, verschieben: gVerschieben, suchen: gSuchen,
   papierkorb: gPapierkorb, chrome: gChrome, adressleiste: gAdressleiste, googeln: gGoogeln,
   youtube: gYoutube, zurueck: gZurueck, mailoeffnen: gMailOeffnen, maillesen: gMailLesen,
-  antworten: gAntworten, mailschreiben: gMailSchreiben
+  antworten: gAntworten, mailschreiben: gMailSchreiben,
+  zoomstart: gZoomStart, zoombeitreten: gZoomBeitreten, zoomton: gZoomTon,
+  zoombild: gZoomBild, zoomverlassen: gZoomVerlassen
 };
 
 /* ============================================================
@@ -1443,7 +1557,8 @@ const THEMEN = [
   { id: "schreibtisch", name: "Schreibtisch & Dock", emoji: "🖥️" },
   { id: "finder", name: "Ordner & Dateien", emoji: "📁" },
   { id: "internet", name: "Internet & YouTube", emoji: "🌍" },
-  { id: "mail", name: "E-Mail", emoji: "✉️" }
+  { id: "mail", name: "E-Mail", emoji: "✉️" },
+  { id: "zoom", name: "Zoom: Videoanrufe", emoji: "🎥" }
 ];
 
 const KARTEN = [
@@ -1628,6 +1743,47 @@ const KARTEN = [
       "Zum Schluss oben auf den Papierflieger – abgeschickt!"],
     uebung: "Schreibe Julien eine kurze Test-E-Mail: Stift-und-Blatt-Symbol anklicken, seine Adresse bei „An“ tippen, Betreff „Test“, ein Satz als Nachricht, Papierflieger.",
     hilfe: ["Bei „An“ hilft Mail mit: Nach den ersten Buchstaben schlägt es bekannte Adressen vor – Vorschlag anklicken, fertig.", "Die E-Mail-Adresse muss genau stimmen (mit @ und allem). Ein Tippfehler, und die Mail kommt zurück.", "Zwischen den Feldern wechselst du mit einem Klick – oder mit der Tab-Taste (⇥, links auf der Tastatur)."]
+  },
+
+  {
+    id: "zoomstart", thema: "zoom", titel: "Was ist Zoom?", gfx: "zoomstart",
+    text: ["Zoom ist ein Telefonat mit Bild: Ihr seht und hört euch gegenseitig, auch wenn ihr weit auseinander seid.",
+      "Auf dem Bildschirm siehst du für jeden ein eigenes Kästchen – für Julien eines und für dich eines. Unten läuft eine dunkle Leiste mit den Knöpfen: Ton, Bild und der rote Knopf zum Beenden.",
+      "Wichtig vorweg: Du kannst dabei nichts kaputt machen. Alles, was du drückst, lässt sich mit demselben Knopf wieder rückgängig machen."],
+    uebung: "Öffne Zoom einmal in Ruhe: blaues Symbol mit der weißen Kamera – im Dock oder über die Lupe oben rechts („Zoom“ tippen, Enter). Schau dir das Fenster an und schließe es danach wieder am roten Punkt.",
+    hilfe: ["Zoom ist nicht im Dock? Nimm die Lupe oben rechts: „Zoom“ tippen, Enter drücken.", "Zoom fragt beim ersten Mal um Erlaubnis für Kamera und Mikrofon – da darfst du auf „OK“ klicken.", "Du musst dich für ein Gespräch nicht anmelden. Ein Zoom-Konto braucht nur, wer selbst einlädt."]
+  },
+  {
+    id: "zoombeitreten", thema: "zoom", titel: "An einem Gespräch teilnehmen", gfx: "zoombeitreten",
+    text: ["Meistens lädt dich jemand ein und schickt dir einen Link – blauer, unterstrichener Text in einer E-Mail oder Nachricht, zum Beispiel „zoom.us/j/812 4455 90“.",
+      "Du machst nur zwei Dinge: den blauen Link anklicken. Und wenn Zoom aufgeht und fragt, auf den blauen Knopf „Mit Video beitreten“ klicken. Mehr nicht.",
+      "Manchmal steht kurz „Warten auf den Gastgeber“. Das heißt nur: Julien ist noch nicht da. Einfach sitzen bleiben, es geht von selbst weiter."],
+    uebung: "Verabrede mit Julien einen Test. Öffne seine E-Mail mit dem Zoom-Link, klicke den blauen Link an und dann auf „Mit Video beitreten“. Wenn du ihn siehst: geschafft!",
+    hilfe: ["Ein Link ist blau und unterstrichen. Ein Klick genügt, kein Doppelklick.", "Es öffnet sich zuerst Chrome und fragt „Zoom öffnen?“ – dann auf „Zoom öffnen“ oder „Erlauben“ klicken.", "Falsch geklickt oder rausgeflogen? Klicke den Link einfach noch einmal an, du kommst wieder rein."]
+  },
+  {
+    id: "zoomton", thema: "zoom", titel: "Ton an, Ton aus", gfx: "zoomton",
+    text: ["Unten links in der dunklen Leiste ist ein Mikrofon. Es sagt, ob die anderen dich hören.",
+      "Liegt ein roter Strich darüber, hört dich niemand – das nennt man „stummgeschaltet“. Ein Klick auf das Mikrofon nimmt den Strich weg, und du bist wieder zu hören.",
+      "Niemand hört dich? Dann ist fast immer nur dieser rote Strich schuld. Einmal draufklicken, und es geht weiter."],
+    uebung: "Klicke im Gespräch einmal auf das Mikrofon: Der rote Strich erscheint, Julien hört dich nicht mehr. Klicke noch einmal darauf – der Strich ist weg, sag „Hörst du mich?“",
+    hilfe: ["Die Leiste unten versteckt sich manchmal. Fahre mit dem Pfeil einfach ins Fenster, dann kommt sie zurück.", "Du hörst die anderen nicht? Dann ist es die Lautstärke deines Macs: Taste F12 oben in der Tastatur macht lauter.", "Stummschalten ist nichts Schlimmes – es hilft sogar, wenn es bei dir gerade laut ist."]
+  },
+  {
+    id: "zoombild", thema: "zoom", titel: "Kamera an und aus", gfx: "zoombild",
+    text: ["Direkt neben dem Mikrofon ist eine kleine Kamera. Sie steuert, ob die anderen dich sehen.",
+      "Auch hier gilt: roter Strich = niemand sieht dich. Statt deinem Bild erscheint dann nur dein Name im Kästchen. Ein Klick, und du bist wieder im Bild.",
+      "Deine Kamera ist oben in der Mitte des Bildschirmrands. Du musst also in den Bildschirm schauen, nicht nach unten."],
+    uebung: "Klicke einmal auf die Kamera: Dein Bild verschwindet, dein Name steht da. Klicke noch einmal – du bist wieder zu sehen. Schau dabei auf dein eigenes Kästchen.",
+    hilfe: ["Dein Bild bleibt schwarz? Dann klebt vielleicht etwas vor der Kamera oben am Bildschirmrand.", "Es ist völlig in Ordnung, die Kamera auszulassen und nur zu reden.", "Ein kleines grünes Licht neben der Kamera heißt: Sie läuft gerade."]
+  },
+  {
+    id: "zoomverlassen", thema: "zoom", titel: "Das Gespräch beenden", gfx: "zoomverlassen",
+    text: ["Zum Auflegen gibt es unten rechts einen roten Knopf: „Verlassen“.",
+      "Ein Klick darauf, danach fragt Zoom noch einmal nach – dort klickst du wieder auf „Meeting verlassen“. Das Fenster geht zu, das Gespräch ist beendet.",
+      "Aus Versehen gedrückt? Kein Drama: Klicke den Link noch einmal an, und du bist wieder dabei."],
+    uebung: "Beende einen Testanruf mit Julien selbst: roter Knopf unten rechts, dann in der Nachfrage noch einmal „Meeting verlassen“.",
+    hilfe: ["Nur das Fenster am roten Punkt zu schließen reicht meistens auch – der rote Knopf ist aber der saubere Weg.", "Der rote Knopf ist immer ganz rechts in der dunklen Leiste, weit weg von Ton und Bild – da verklickt man sich nicht.", "Nach dem Verlassen bleibt Zoom noch geöffnet. Das ist normal, du kannst es einfach zumachen."]
   }
 ];
 
@@ -1636,7 +1792,7 @@ const KARTEN = [
    ============================================================ */
 /* Version dieser App-Datei. Muss zur "version" in version.json passen –
    sonst holt sich die App beim Start automatisch die neue Fassung. */
-const VERSION = "2.4.0";
+const VERSION = "2.5.0";
 
 /* Abstand nach der n-ten geschafften Wiederholung: Stufe 1 → morgen, Stufe 2 → 2 Tage, … */
 const PLAN_TAGE = [1, 2, 4, 7, 14, 30, 60];
@@ -1821,15 +1977,20 @@ function zeigeStart() {
   const themenHTML = THEMEN.map(t => {
     const karten = KARTEN.filter(k => k.thema === t.id);
     const sicher = karten.filter(k => kartenStatus(k.id) === "sicher").length;
-    const begonnen = karten.filter(k => kartenStatus(k.id) !== "neu").length;
-    const pct = Math.round((sicher / karten.length) * 100);
+    const lernen = karten.filter(k => kartenStatus(k.id) === "lernen").length;
+    /* Angefangene Karten zählen halb – so bewegt sich der Balken schon ab der ersten Übung. */
+    const pctSicher = Math.round((sicher / karten.length) * 100);
+    const pctLernen = Math.round((lernen / karten.length) * 50);
+    const stand = sicher === 0 && lernen === 0
+      ? `${karten.length} Übungen<br>noch nicht<br>angefangen`
+      : `${sicher} von ${karten.length}<br>sitzen${lernen ? `<br><span class="t-lernen">🌱 ${lernen} am Lernen</span>` : ""}`;
     return `<button class="thema-zeile" data-thema="${t.id}">
       <span class="t-emoji">${t.emoji}</span>
       <span class="t-mitte">
         <span class="t-name">${t.name}</span>
-        <span class="mini-balken"><div style="width:${pct}%"></div></span>
+        <span class="mini-balken"><div style="width:${pctSicher}%"></div><div class="ml-lernen" style="width:${pctLernen}%"></div></span>
       </span>
-      <span class="t-stand">${sicher} von ${karten.length}<br>sitzen${begonnen === 0 ? "" : ""}</span>
+      <span class="t-stand">${stand}</span>
     </button>`;
   }).join("");
 
@@ -1857,6 +2018,7 @@ function zeigeStart() {
     </div>` : ""}
     <div class="themen-liste">
       <h3>Zum Nachschauen: alle Themen</h3>
+      <p style="color:var(--grey); font-size:0.85rem; margin:-0.4rem 0 0.7rem">🌱 am Lernen = schon geübt. „Sitzt“ wird eine Übung, wenn sie an mehreren Tagen geklappt hat.</p>
       ${themenHTML}
     </div>
     <div class="fuss">Mac-Coach · Version ${VERSION}</div>`;
