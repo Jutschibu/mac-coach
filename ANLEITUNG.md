@@ -1,6 +1,6 @@
 # Mac-Coach – Anleitung für Julien
 
-Ein Spaced-Repetition-Lernsystem, mit dem Mama den Umgang mit ihrem MacBook Air lernt: 30 Karten in 6 Themen, davon 9 mit interaktiven Übungen, die echte Aktionen erkennen (Klick, Rechtsklick, Doppelklick, Scrollen, Ziehen, Fake-Finder).
+Ein Spaced-Repetition-Lernsystem, mit dem Mama den Umgang mit ihrem MacBook Air lernt: 31 Karten in 6 Themen, davon 9 mit interaktiven Übungen, die echte Aktionen erkennen (Klick, Rechtsklick, Doppelklick, Scrollen, Ziehen, Fake-Finder).
 
 **Live:** https://jutschibu.github.io/mac-coach/
 **Quelle:** `~/Documents/Claude/Mac-Coach/` (Git-Repo, GitHub: `Jutschibu/mac-coach`, öffentlich)
@@ -48,12 +48,16 @@ Danach dauert es 1 bis 3 Minuten, bis GitHub die neue Fassung ausliefert.
 ## Wie das Lernsystem funktioniert
 
 - Pro Tag kommen **3 neue Themen** (in den Einstellungen änderbar) plus alle fälligen Wiederholungen.
-- **9 Karten haben interaktive Spiel-Übungen** (alle 6 Trackpad-Karten + Ordner anlegen, Datei verschieben, Papierkorb). Die App erkennt die echte Aktion und bewertet selbst:
+- **9 Karten haben interaktive Spiel-Übungen** (6 der 7 Trackpad-Karten + Ordner anlegen, Datei verschieben, Papierkorb). Die App erkennt die echte Aktion und bewertet selbst:
   - Geschafft → das Übungsfeld verwandelt sich in eine große grüne Fläche („Perfekt – das hat geklappt!") und zählt als „Kann ich".
   - Falsche Aktion → sanftes Feedback, was stattdessen passiert ist („Das war ein normaler Klick …"). Nach 2 Fehlversuchen klappt die Hilfe von selbst auf, nach 4 kommt ein druckfreier Ausstieg („kommt morgen einfach nochmal").
   - **Ab der ersten Wiederholung** folgt die Echt-Zugabe: „Und jetzt in echt, auf deinem Mac" mit „✓ Hat am Mac geklappt" / „Am Mac klappt's noch nicht".
 - Die übrigen Karten laufen über Selbsteinschätzung (😅 gleich nochmal · 🙂 morgen wieder · 😄 Kann ich!).
 - **Der Rhythmus ist überall sichtbar:** Nach jedem Erfolg steht da, wann die Übung wiederkommt, plus eine Leiste `1 › 2 › 4 › 7 › 14 › 30 › 60 Tage Abstand` mit markierter aktueller Stufe. Jede neue Übung kommt am nächsten Tag wieder, danach wachsen die Abstände. Ab Stufe 4 (Wochenabstand) gilt eine Karte als „✓ sitzt".
+
+- **Themen frei üben:** In jedem Thema steht oben „▶ Jetzt … üben". Das startet eine Runde mit allen Karten des Themas – unabhängig vom Tageslimit und auch dann, wenn für heute schon alles erledigt ist. Die Bewertungen zählen ganz normal in den Wiederholungsrhythmus.
+- **Einzelne Karte nachtragen:** Beim Nachschauen einer Karte gibt es „✓ Das habe ich gerade geübt" (= „Kann ich!", Karte steigt eine Stufe) und daneben „Nur angeschaut – zurück" (ändert nichts).
+- **„Das kann ich schon"** ist der kleine, unterstrichene Knopf ganz unten auf einer Karte – bewusst klein, mit Rückfrage. Er setzt die Karte auf die höchste Stufe (60 Tage), sie verschwindet also aus dem täglichen Üben. Derselbe Knopf holt sie später wieder zurück („Doch wieder üben"). In der Themenliste steht dann „✓ kann ich schon".
 
 **🤔 „Das möchte ich Julien fragen"** steht auf jeder Karte. Was sie markiert, sammelt sich in den Einstellungen unter „Fragen an Julien" – da schaust du rein, wenn du sie besuchst oder anrufst.
 

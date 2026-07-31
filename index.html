@@ -73,6 +73,33 @@
   }
   .btn-zart:hover { border-color: var(--teal); }
 
+  /* Kleiner, unauffälliger Knopf – bewusst schmal, damit er nicht aus Versehen getroffen wird */
+  .btn-mini {
+    display: inline-block;
+    width: auto;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    padding: 0.35rem 0.5rem;
+    color: var(--grey);
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .btn-mini:hover { color: var(--teal-dark); }
+  .mini-zeile { text-align: center; margin-top: 0.9rem; }
+  .einzel-aktionen { margin-top: 1.3rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .fertig-hinweis {
+    margin-top: 1rem;
+    background: #EAF1EE;
+    border: 1px solid #CBDED7;
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+  }
+  .fertig-hinweis strong { color: var(--teal-dark); }
+
   .kopf {
     display: flex;
     align-items: center;
@@ -1051,6 +1078,33 @@ function gMailSchreiben() {
     <text x="76" y="206" font-size="14" fill="${F.ink}">Liebe Grüße, Mama</text>`, 240);
 }
 
+/* Eine Druckstufe: Finger, Pfeil, gedrückte Platte */
+function klickStufe(x, nr, titel, unter, tief, ok) {
+  const py = tief ? 138 : 128;
+  const farbe = ok ? F.tealDark : F.rot;
+  return `<rect x="${x}" y="30" width="180" height="164" rx="14" fill="${F.pad}" stroke="${ok ? "#BFD6CF" : "#EBC7C1"}" stroke-width="2"/>
+    <text x="${x + 90}" y="54" text-anchor="middle" font-size="14" font-weight="700" fill="${farbe}">${nr}. ${titel}</text>
+    ${finger(x + 90, 92, false)}
+    ${pfeil(x + 90, 108, x + 90, py - 8, farbe, 4)}
+    <rect x="${x + 35}" y="${py}" width="110" height="12" rx="6" fill="#CFCBC2"/>
+    ${tief ? `<rect x="${x + 35}" y="${py + 16}" width="110" height="6" rx="3" fill="#E0DCD3"/>` : ""}
+    <text x="${x + 90}" y="${py + 44}" text-anchor="middle" font-size="13" fill="${F.grau}">${unter}</text>`;
+}
+
+function gKraeftigerKlick() {
+  return sv(`
+    ${klickStufe(24, 1, "leicht drücken", "„klick“ – genau richtig", false, true)}
+    ${klickStufe(236, 2, "weiter durchdrücken", "„klick-klack“ – zu tief", true, false)}
+    <text x="126" y="16" text-anchor="middle" font-size="26">✓</text>
+    <text x="338" y="18" text-anchor="middle" font-size="22">⚠️</text>
+    <rect x="236" y="200" width="180" height="46" rx="9" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <text x="248" y="220" font-size="12" fill="${F.ink}" font-weight="700">Apfel</text>
+    <text x="248" y="238" font-size="11" fill="${F.grau}">Substantiv – Frucht des …</text>
+    <text x="126" y="222" text-anchor="middle" font-size="13" fill="${F.tealDark}" font-weight="600">es passiert genau das,</text>
+    <text x="126" y="240" text-anchor="middle" font-size="13" fill="${F.tealDark}" font-weight="600">was du wolltest</text>
+    <text x="326" y="264" text-anchor="middle" font-size="12" fill="${F.grau}">so ein Kästchen kommt dann</text>`, 274);
+}
+
 /* --- Zoom: Kacheln, Knopfleiste, Fenster --- */
 function zoomKachel(x, y, b, h, name, kameraAus = false) {
   const person = kameraAus
@@ -1169,6 +1223,7 @@ const GRAFIKEN = {
   papierkorb: gPapierkorb, chrome: gChrome, adressleiste: gAdressleiste, googeln: gGoogeln,
   youtube: gYoutube, zurueck: gZurueck, mailoeffnen: gMailOeffnen, maillesen: gMailLesen,
   antworten: gAntworten, mailschreiben: gMailSchreiben,
+  kraeftigerklick: gKraeftigerKlick,
   zoomstart: gZoomStart, zoombeitreten: gZoomBeitreten, zoomton: gZoomTon,
   zoombild: gZoomBild, zoomverlassen: gZoomVerlassen
 };
@@ -1558,7 +1613,7 @@ const THEMEN = [
   { id: "finder", name: "Ordner & Dateien", emoji: "📁" },
   { id: "internet", name: "Internet & YouTube", emoji: "🌍" },
   { id: "mail", name: "E-Mail", emoji: "✉️" },
-  { id: "zoom", name: "Zoom: Videoanrufe", emoji: "🎥" }
+  { id: "zoom", name: "Zoom & Videoanrufe", emoji: "🎥" }
 ];
 
 const KARTEN = [
@@ -1575,6 +1630,17 @@ const KARTEN = [
       "Fahre mit dem Pfeil auf etwas und drücke dann das Trackpad mit einem Finger kurz herunter, bis es leise „klick“ macht. Ein Klick wählt etwas aus oder drückt einen Knopf."],
     uebung: "Klicke einmal auf eine freie Stelle des Hintergrundbilds. Dann klicke auf ein buntes Symbol unten in der Leiste und schau, was passiert. (Was auch immer aufgeht: Du kannst es oben links am roten Punkt wieder schließen.)",
     hilfe: ["Wirklich herunterdrücken, bis es klickt – nicht nur berühren.", "Der Pfeil muss auf dem Ding stehen, BEVOR du drückst.", "Es kann nichts kaputtgehen. Jedes Fenster lässt sich wieder schließen."]
+  },
+  {
+    id: "kraeftigerklick", thema: "maus", titel: "Leicht klicken statt tief drücken", gfx: "kraeftigerklick",
+    text: ["Dein Trackpad hat zwei Druckstufen. Drückst du leicht, macht es einmal „klick“ – das ist der normale Klick, und mehr brauchst du fast nie.",
+      "Drückst du weiter durch, kommt eine zweite, tiefere Stufe: „klick-klack“. Die heißt bei Apple „kräftiger Klick“. Dann schlägt der Mac zum Beispiel ein Wort nach oder zeigt eine Vorschau – ein Kästchen geht auf, das du gar nicht wolltest.",
+      "Der ganze Trick: Sobald es das erste Mal „klick“ macht, den Finger wieder anheben. Nicht durchdrücken, nicht gedrückt halten."],
+    uebung: "Lege den Finger aufs Trackpad und drücke ganz langsam immer fester. Spüre die zwei Stufen: erst „klick“, dann tiefer „klack“. Übe jetzt fünfmal, bei der ERSTEN Stufe zu stoppen und den Finger sofort anzuheben.",
+    hilfe: ["Ist so ein Kästchen mit Erklärungen aufgegangen? Dann war es der tiefe Klick. Einmal auf eine freie Stelle klicken, dann ist es wieder weg – kaputt geht dabei nichts.",
+      "Kurz und leicht antippen statt langsam draufdrücken hilft am meisten. Ein Klick darf ganz schnell sein.",
+      "Es geht auch ganz ohne Drücken: Julien kann „Tippen zum Klicken“ einschalten, dann genügt ein leichtes Antippen der Fläche.",
+      "Wenn es dich weiter stört, kann Julien den kräftigen Klick in den Systemeinstellungen unter „Trackpad“ ganz abschalten."]
   },
   {
     id: "rechtsklick", thema: "maus", titel: "Der Rechtsklick", gfx: "rechtsklick", interaktiv: "rechtsklickfeld",
@@ -1792,7 +1858,7 @@ const KARTEN = [
    ============================================================ */
 /* Version dieser App-Datei. Muss zur "version" in version.json passen –
    sonst holt sich die App beim Start automatisch die neue Fassung. */
-const VERSION = "2.5.0";
+const VERSION = "2.6.0";
 
 /* Abstand nach der n-ten geschafften Wiederholung: Stufe 1 → morgen, Stufe 2 → 2 Tage, … */
 const PLAN_TAGE = [1, 2, 4, 7, 14, 30, 60];
@@ -1914,6 +1980,28 @@ function bewerte(id, urteil) {
   speichern();
 }
 
+/* „Das kann ich schon“: Karte auf die höchste Stufe setzen, damit sie im
+   täglichen Rhythmus praktisch nicht mehr auftaucht (nur noch zur Auffrischung). */
+function alsKannMarkieren(id) {
+  const heute = heuteISO();
+  const k = daten.karten[id] || { stufe: 0, gesehen: 0, start: heute };
+  k.stufe = MAX_STUFE;
+  k.faellig = tagePlus(heute, abstandFuer(MAX_STUFE));
+  k.uebersprungen = true;
+  daten.karten[id] = k;
+  speichern();
+}
+/* Rückgängig: Karte kommt wieder ganz normal in den Rhythmus. */
+function wiederAufnehmen(id) {
+  const heute = heuteISO();
+  const k = daten.karten[id] || { stufe: 0, gesehen: 0, start: heute };
+  k.stufe = 0;
+  k.faellig = heute;
+  k.uebersprungen = false;
+  daten.karten[id] = k;
+  speichern();
+}
+
 function streakZaehlen() {
   const tage = [...new Set(daten.tage)].sort().reverse();
   if (!tage.length) return 0;
@@ -1935,6 +2023,20 @@ let rundePos = 0;
 let rundeGesamt = 0;
 let aufStartseite = false;
 let neuHinweis = "";
+/* Wohin es nach „Pause“ und nach der letzten Karte zurückgeht.
+   Bei der Tagesrunde die Startseite, bei einer Themenrunde das Thema. */
+let rundeZurueck = zeigeStart;
+let rundeTitel = "";
+
+/* Startet eine Übungsrunde mit einer festen Kartenliste. */
+function starteRunde(karten, zurueck, titel = "") {
+  runde = karten.slice();
+  rundePos = 0;
+  rundeGesamt = runde.length;
+  rundeZurueck = zurueck;
+  rundeTitel = titel;
+  zeigeKarte();
+}
 
 /* Holt version.json und lädt die App einmal neu, wenn eine neuere Fassung
    veröffentlicht wurde. Ohne Internet passiert einfach nichts. */
@@ -2010,6 +2112,7 @@ function zeigeStart() {
            <div style="font-size:2.2rem">🎉</div>
            <p style="margin:0.4rem 0 0"><strong>Für heute ist alles erledigt!</strong></p>
            <p style="color:var(--grey); margin:0.3rem 0 0">Komm morgen einfach wieder – dann warten die nächsten Wiederholungen auf dich.</p>
+           <p style="color:var(--grey); margin:0.6rem 0 0">Du magst noch mehr? Tippe unten ein Thema an – dort kannst du es jederzeit zusätzlich üben.</p>
          </div>`}
     ${neuHinweis ? `<div class="neu-banner">
       <div class="nb-titel">✨ Es ist etwas Neues dazugekommen</div>
@@ -2032,12 +2135,7 @@ function zeigeStart() {
   };
   app.querySelector('[data-akt="einstellungen"]').onclick = zeigeEinstellungen;
   const startBtn = app.querySelector('[data-akt="start"]');
-  if (startBtn) startBtn.onclick = () => {
-    runde = baueRunde();
-    rundePos = 0;
-    rundeGesamt = runde.length;
-    zeigeKarte();
-  };
+  if (startBtn) startBtn.onclick = () => starteRunde(baueRunde(), zeigeStart);
   app.querySelectorAll("[data-thema]").forEach(b => b.onclick = () => zeigeThema(b.dataset.thema));
 }
 
@@ -2090,7 +2188,7 @@ function zeigeKarte() {
   const wiederholung = !!daten.karten[karte.id];
   app.innerHTML = `
     <div class="session-kopf">
-      <span class="zaehler">Karte ${Math.min(rundePos + 1, rundeGesamt)} von ${rundeGesamt}</span>
+      <span class="zaehler">${rundeTitel ? esc(rundeTitel) + ": " : ""}Karte ${Math.min(rundePos + 1, rundeGesamt)} von ${rundeGesamt}</span>
       <div class="fortschritt-leiste"><div style="width:${pct}%"></div></div>
       <button class="pause" data-akt="pause">Pause</button>
     </div>
@@ -2103,10 +2201,12 @@ function zeigeKarte() {
         <button class="b-kann" data-urteil="kann"><span class="emo">😄</span>Kann ich!<span class="k-sub">${abstandText(vorschau(karte.id, "kann").tage)} wieder</span></button>
       </div>
       <div class="sr-hinweis">🔁 Jede Karte kommt wieder – erst morgen, dann in 2 Tagen, 4 Tagen, einer Woche … immer seltener, bis sie sicher sitzt.</div>`}
+      <div class="mini-zeile"><button class="btn-mini" data-akt="kannich">Das kann ich schon – nicht mehr wiederholen</button></div>
+      <div id="kannich-echo"></div>
     </div>`;
   window.scrollTo(0, 0);
 
-  app.querySelector('[data-akt="pause"]').onclick = zeigeStart;
+  app.querySelector('[data-akt="pause"]').onclick = () => rundeZurueck();
   app.querySelector('[data-akt="frage"]').onclick = e => frageUmschalten(karte, e.target);
   const weiter = urteil => {
     bewerte(karte.id, urteil);
@@ -2117,6 +2217,24 @@ function zeigeKarte() {
     rundePos++;
     zeigeKarte();
   };
+  /* Kleiner Knopf mit Rückfrage: Karte ganz aus dem täglichen Üben nehmen. */
+  const echo = app.querySelector("#kannich-echo");
+  app.querySelector('[data-akt="kannich"]').onclick = () => {
+    echo.innerHTML = `<div class="fertig-hinweis">
+      <strong>Sicher?</strong><br>Dann kommt „${karte.titel}“ nicht mehr im täglichen Üben vor – nur noch ganz selten zur Auffrischung. Im Thema kannst du das jederzeit rückgängig machen.
+      <div style="display:flex; gap:0.6rem; margin-top:0.8rem">
+        <button class="btn-zart" data-akt="kann-ja">Ja, kann ich schon</button>
+        <button class="btn-zart" data-akt="kann-nein">Nein, doch üben</button>
+      </div></div>`;
+    echo.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    echo.querySelector('[data-akt="kann-ja"]').onclick = () => {
+      alsKannMarkieren(karte.id);
+      rundePos++;
+      zeigeKarte();
+    };
+    echo.querySelector('[data-akt="kann-nein"]').onclick = () => { echo.innerHTML = ""; };
+  };
+
   if (karte.interaktiv) {
     starteUebung(karte, { modus: "lernen", wiederholung, weiter });
   } else {
@@ -2129,15 +2247,22 @@ function zeigeFertig() {
   const heute = heuteISO();
   if (!daten.tage.includes(heute)) { daten.tage.push(heute); speichern(); }
   const streak = streakZaehlen();
+  const themenRunde = !!rundeTitel;
+  const offen = baueRunde().length;
   app.innerHTML = `
     <div class="karte-box fertig-box">
       <div class="gross-emoji">🌟</div>
-      <h2>Geschafft – fertig für heute!</h2>
+      <h2>${themenRunde ? `Geschafft – ${esc(rundeTitel)} durch!` : "Geschafft – fertig für heute!"}</h2>
       <p style="margin-top:0.5rem">Du hast ${rundeGesamt} ${rundeGesamt === 1 ? "Karte" : "Karten"} geübt.</p>
       ${streak >= 2 ? `<div class="streak">🔥 ${streak} Tage hintereinander!</div>` : ""}
-      <p style="margin-top:1rem">Morgen warten die nächsten Wiederholungen auf dich. Bis dann!</p>
-      <button class="btn-gross" style="margin-top:1.2rem" data-akt="heim">Zur Startseite</button>
+      <p style="margin-top:1rem">${themenRunde
+        ? `Alles davon ist jetzt im Wiederholungs-Rhythmus – die Karten kommen von allein wieder.${offen ? ` Für heute warten außerdem noch ${offen} ${offen === 1 ? "Karte" : "Karten"} auf der Startseite.` : ""}`
+        : "Morgen warten die nächsten Wiederholungen auf dich. Bis dann!"}</p>
+      ${themenRunde ? `<button class="btn-gross" style="margin-top:1.2rem" data-akt="zurueck">Zurück zum Thema</button>` : ""}
+      <button class="${themenRunde ? "btn-zart" : "btn-gross"}" style="margin-top:${themenRunde ? "0.6rem" : "1.2rem"}" data-akt="heim">Zur Startseite</button>
     </div>`;
+  const zurueckBtn = app.querySelector('[data-akt="zurueck"]');
+  if (zurueckBtn) zurueckBtn.onclick = () => rundeZurueck();
   app.querySelector('[data-akt="heim"]').onclick = zeigeStart;
 }
 
@@ -2148,29 +2273,82 @@ function zeigeThema(themaId) {
   app.innerHTML = `
     <div class="zurueck-leiste"><button data-akt="heim">← Zurück zur Startseite</button></div>
     <h2>${thema.emoji} ${thema.name}</h2>
-    <p style="color:var(--grey); font-size:0.95rem; margin:0.3rem 0 1rem">Zum Nachschauen: Klicke eine Karte an, um sie noch einmal zu lesen.</p>
+    <p style="color:var(--grey); font-size:0.95rem; margin:0.3rem 0 1rem">Übe das ganze Thema am Stück – oder klicke unten eine einzelne Karte an.</p>
+    <button class="btn-gross" data-akt="thema-ueben">▶ &nbsp;Jetzt ${thema.name} üben &nbsp;·&nbsp; ${karten.length} ${karten.length === 1 ? "Karte" : "Karten"}</button>
+    <p style="color:var(--grey); font-size:0.85rem; margin:0.6rem 0 1.4rem; text-align:center">Das geht jederzeit zusätzlich – auch wenn für heute schon alles erledigt ist.</p>
     <div class="karten-liste">
       ${karten.map(k => {
         const s = kartenStatus(k.id);
-        return `<button data-karte="${k.id}"><span>${k.titel}</span><span class="status s-${s}">${statusText(s)}</span></button>`;
+        const d = daten.karten[k.id];
+        const txt = d && d.uebersprungen ? "✓ kann ich schon" : statusText(s);
+        return `<button data-karte="${k.id}"><span>${k.titel}</span><span class="status s-${s}">${txt}</span></button>`;
       }).join("")}
     </div>`;
   app.querySelector('[data-akt="heim"]').onclick = zeigeStart;
+  app.querySelector('[data-akt="thema-ueben"]').onclick = () =>
+    starteRunde(karten, () => zeigeThema(themaId), thema.name);
   app.querySelectorAll("[data-karte]").forEach(b => b.onclick = () => zeigeEinzelkarte(b.dataset.karte, themaId));
 }
 
 function zeigeEinzelkarte(kartenId, themaId) {
   aufStartseite = false;
   const karte = KARTEN.find(k => k.id === kartenId);
+  const stand = daten.karten[kartenId];
+  const uebersprungen = !!(stand && stand.uebersprungen);
   app.innerHTML = `
     <div class="zurueck-leiste"><button data-akt="zurueck">← Zurück zur Themenliste</button></div>
     <div class="karte-box">
       ${kartenInhalt(karte)}
-      <button class="btn-zart" style="margin-top:1.2rem" data-akt="zurueck2">Alles klar – zurück</button>
+      <div class="einzel-aktionen">
+        <button class="btn-gross" data-akt="geuebt">✓ &nbsp;Das habe ich gerade geübt</button>
+        <button class="btn-zart" data-akt="zurueck2">Nur angeschaut – zurück</button>
+        <div class="mini-zeile">
+          <button class="btn-mini" data-akt="kannich">${uebersprungen
+            ? "Doch wieder üben – zurück in den Rhythmus"
+            : "Das kann ich schon – nicht mehr wiederholen"}</button>
+        </div>
+      </div>
+      <div id="einzel-echo"></div>
     </div>`;
   window.scrollTo(0, 0);
   app.querySelector('[data-akt="frage"]').onclick = e => frageUmschalten(karte, e.target);
   app.querySelectorAll('[data-akt="zurueck"], [data-akt="zurueck2"]').forEach(b => b.onclick = () => zeigeThema(themaId));
+
+  const echo = app.querySelector("#einzel-echo");
+  const zeigeEcho = html => {
+    echo.innerHTML = `<div class="fertig-hinweis">${html}
+      <button class="btn-zart" style="margin-top:0.8rem" data-akt="fertig">Zurück zur Themenliste</button></div>`;
+    echo.querySelector('[data-akt="fertig"]').onclick = () => zeigeThema(themaId);
+    echo.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  };
+
+  app.querySelector('[data-akt="geuebt"]').onclick = () => {
+    bewerte(karte.id, "kann");
+    app.querySelector('[data-akt="geuebt"]').disabled = true;
+    zeigeEcho(`<strong>Prima – gespeichert!</strong><br>Diese Übung kommt ${abstandText(abstandFuer(daten.karten[karte.id].stufe))} zur Wiederholung wieder.`);
+  };
+
+  /* Kleiner Knopf mit Rückfrage – ein einzelner Fehlklick ändert nichts. */
+  app.querySelector('[data-akt="kannich"]').onclick = () => {
+    if (uebersprungen) {
+      wiederAufnehmen(karte.id);
+      zeigeEcho(`<strong>Alles klar.</strong><br>Diese Übung ist wieder im normalen Rhythmus und kommt demnächst dran.`);
+      return;
+    }
+    echo.innerHTML = `<div class="fertig-hinweis">
+      <strong>Sicher?</strong><br>Dann kommt „${karte.titel}“ nicht mehr im täglichen Üben vor – nur noch ganz selten zur Auffrischung. Du kannst das hier jederzeit wieder ändern.
+      <div style="display:flex; gap:0.6rem; margin-top:0.8rem">
+        <button class="btn-zart" data-akt="kann-ja">Ja, kann ich schon</button>
+        <button class="btn-zart" data-akt="kann-nein">Nein, doch üben</button>
+      </div></div>`;
+    echo.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    echo.querySelector('[data-akt="kann-ja"]').onclick = () => {
+      alsKannMarkieren(karte.id);
+      zeigeEcho(`<strong>Gemerkt.</strong><br>„${karte.titel}“ kommt nicht mehr im täglichen Üben vor.`);
+    };
+    echo.querySelector('[data-akt="kann-nein"]').onclick = () => { echo.innerHTML = ""; };
+  };
+
   if (karte.interaktiv) starteUebung(karte, { modus: "ansehen" });
 }
 
