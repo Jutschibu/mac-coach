@@ -924,6 +924,117 @@ function gPapierkorb() {
     <text x="110" y="130" text-anchor="middle" font-size="13" fill="${F.grau}">Datei</text>`, 208);
 }
 
+/* Tastenkappe für Kurzbefehle */
+function taste(x, y, b, label, sub = "", h = 40) {
+  return `<rect x="${x}" y="${y}" width="${b}" height="${h}" rx="8" fill="#F8F6F1" stroke="${F.linie}" stroke-width="2"/>
+    <text x="${x + b / 2}" y="${y + (sub ? h / 2 + 3 : h / 2 + 6)}" text-anchor="middle" font-size="17" font-weight="700" fill="${F.ink}">${label}</text>
+    ${sub ? `<text x="${x + b / 2}" y="${y + h - 6}" text-anchor="middle" font-size="8.5" fill="${F.grau}">${sub}</text>` : ""}`;
+}
+
+function gOrdnerUmbenennen() {
+  return sv(`
+    ${finderFenster(`
+      ${ordnerSymbol(178, 78, "")}
+      <rect x="164" y="116" width="72" height="19" rx="4" fill="#4A7FC1"/>
+      <text x="200" y="130" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">Briefe|</text>
+      ${ordnerSymbol(288, 78, "Rezepte")}
+      <text x="200" y="158" text-anchor="middle" font-size="11" fill="${F.grau}">blau = du kannst tippen</text>
+    `)}
+    ${taste(88, 216, 90, "⏎", "Enter-Taste")}
+    <text x="196" y="234" font-size="13" fill="${F.ink}" font-weight="700">Ordner anklicken, Enter drücken,</text>
+    <text x="196" y="252" font-size="13" fill="${F.grau}">neuen Namen tippen, nochmal Enter</text>`, 274);
+}
+
+function gUnterordner() {
+  return sv(`
+    ${finderFenster(`
+      <rect x="150" y="52" width="240" height="20" fill="#FBF9F4"/>
+      <text x="162" y="66" font-size="11" fill="${F.grau}">📄 Dokumente  ›  📁 Briefe</text>
+      ${ordnerSymbol(200, 100, "2026")}
+      ${ordnerSymbol(290, 100, "Ämter")}
+    `)}
+    <rect x="60" y="212" width="320" height="62" rx="12" fill="#EAF1EE" stroke="#CBDED7" stroke-width="2"/>
+    <text x="76" y="232" font-size="12" fill="${F.tealDark}" font-weight="700">Dokumente</text>
+    <rect x="150" y="220" width="220" height="44" rx="9" fill="${F.papier}" stroke="${F.linie}" stroke-width="1.5"/>
+    <text x="162" y="238" font-size="12" fill="${F.tealDark}" font-weight="700">Briefe</text>
+    <rect x="212" y="244" width="146" height="16" rx="6" fill="#F5F2EA"/>
+    <text x="222" y="256" font-size="11" fill="${F.grau}">2026 · Ämter · Bank</text>
+    <text x="220" y="294" text-anchor="middle" font-size="14" fill="${F.grau}">Ordner im Ordner – wie Mappen in einer Schublade</text>`, 304);
+}
+
+function gSpeicherort() {
+  return sv(`
+    <rect x="70" y="20" width="300" height="164" rx="12" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <text x="220" y="46" text-anchor="middle" font-size="13" fill="${F.ink}" font-weight="700">Sichern</text>
+    <text x="88" y="76" font-size="12" fill="${F.grau}">Name:</text>
+    <rect x="140" y="62" width="212" height="22" rx="5" fill="#FBF9F4" stroke="${F.linie}" stroke-width="1.5"/>
+    <text x="148" y="78" font-size="12" fill="${F.ink}">Brief an die Krankenkasse</text>
+    <text x="88" y="116" font-size="12" fill="${F.grau}">Ort:</text>
+    <rect x="140" y="100" width="212" height="24" rx="5" fill="#FBF9F4" stroke="${F.amber}" stroke-width="3"/>
+    <text x="150" y="117" font-size="12" fill="${F.ink}">📁 Dokumente</text>
+    <text x="340" y="117" font-size="11" fill="${F.grau}">⌄</text>
+    <rect x="196" y="144" width="70" height="26" rx="7" fill="#F1EEE6"/>
+    <text x="231" y="161" text-anchor="middle" font-size="12" fill="${F.grau}">Abbrechen</text>
+    <rect x="278" y="144" width="74" height="26" rx="7" fill="#4A7FC1"/>
+    <text x="315" y="161" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">Sichern</text>
+    ${pfeil(120, 148, 138, 118, F.amber)}
+    <text x="112" y="164" text-anchor="end" font-size="12" fill="#8A5E14" font-weight="600">hier steht,</text>
+    <text x="112" y="180" text-anchor="end" font-size="12" fill="#8A5E14" font-weight="600">wo es landet</text>
+    <text x="220" y="212" text-anchor="middle" font-size="14" fill="${F.grau}">Erst den Ort anschauen, dann auf „Sichern“ klicken</text>`, 224);
+}
+
+function gWiederfinden() {
+  return sv(`
+    ${finderFenster(`
+      <rect x="286" y="52" width="96" height="20" rx="10" fill="#FBF9F4" stroke="${F.linie}" stroke-width="1.5"/>
+      <circle cx="298" cy="62" r="5" fill="none" stroke="${F.grau}" stroke-width="2"/>
+      <line x1="302" y1="66" x2="306" y2="70" stroke="${F.grau}" stroke-width="2"/>
+      <text x="310" y="66" font-size="10" fill="${F.grau}">Krankenkasse</text>
+      <rect x="52" y="158" width="88" height="20" rx="5" fill="${F.teal}" opacity="0.18"/>
+      <rect x="52" y="158" width="88" height="20" rx="5" fill="none" stroke="${F.amber}" stroke-width="2.5"/>
+      <text x="60" y="172" font-size="11.5" fill="${F.tealDark}" font-weight="700">🕘 Zuletzt</text>
+      <rect x="164" y="92" width="40" height="50" rx="5" fill="${F.papier}" stroke="${F.grau}" stroke-width="2"/>
+      <line x1="172" y1="108" x2="196" y2="108" stroke="${F.grau}" stroke-width="2"/>
+      <line x1="172" y1="120" x2="196" y2="120" stroke="${F.grau}" stroke-width="2"/>
+      <text x="184" y="158" text-anchor="middle" font-size="10" fill="${F.ink}">Brief …</text>
+      ${pfeil(214, 116, 288, 116, F.amber, 5)}
+      ${ordnerSymbol(302, 100, "Briefe")}
+    `)}
+    <text x="220" y="224" text-anchor="middle" font-size="14" fill="${F.ink}">Links „Zuletzt“ oder oben rechts suchen …</text>
+    <text x="220" y="246" text-anchor="middle" font-size="14" fill="${F.grau}">… dann die Datei in den richtigen Ordner ziehen</text>`, 258);
+}
+
+function gOrdnerLoeschen() {
+  return sv(`
+    ${ordnerSymbol(80, 60, "Alte Briefe", 1.2)}
+    ${pfeil(160, 80, 250, 96, F.amber, 5)}
+    <path d="M270,72 L330,72 L323,152 Q322,160 314,160 L286,160 Q278,160 277,152 Z" fill="#B9B4A9"/>
+    <rect x="264" y="62" width="72" height="10" rx="4" fill="#A5A095"/>
+    <line x1="288" y1="87" x2="291" y2="144" stroke="#8F8A7F" stroke-width="3"/>
+    <line x1="300" y1="87" x2="300" y2="144" stroke="#8F8A7F" stroke-width="3"/>
+    <line x1="312" y1="87" x2="309" y2="144" stroke="#8F8A7F" stroke-width="3"/>
+    <text x="300" y="182" text-anchor="middle" font-size="12" fill="${F.grau}">Papierkorb</text>
+    <rect x="40" y="200" width="360" height="66" rx="12" fill="#FBEEEB" stroke="#EBC7C1" stroke-width="2"/>
+    <text x="220" y="224" text-anchor="middle" font-size="13" fill="${F.rot}" font-weight="700">⚠️ Alles, was im Ordner liegt, kommt mit!</text>
+    <text x="220" y="246" text-anchor="middle" font-size="12.5" fill="${F.ink}">Erst hineinschauen, ob wirklich nichts Wichtiges drin ist.</text>
+    <text x="220" y="262" text-anchor="middle" font-size="12" fill="${F.grau}">Im Papierkorb liegt alles noch – Rechtsklick, „Zurücklegen“.</text>`, 276);
+}
+
+function gFinderKurzbefehle() {
+  const zeile = (y, tasten, was, wozu) => {
+    let x = 30, out = "";
+    tasten.forEach(t => { out += taste(x, y, t.length > 1 ? 54 : 40, t); x += (t.length > 1 ? 54 : 40) + 8; });
+    return `${out}
+      <text x="200" y="${y + 18}" font-size="14" fill="${F.ink}" font-weight="700">${was}</text>
+      <text x="200" y="${y + 35}" font-size="12" fill="${F.grau}">${wozu}</text>`;
+  };
+  return sv(`
+    ${zeile(16, ["⇧", "⌘", "N"], "Neuer Ordner", "Achtung: ⌘N allein macht ein Fenster auf")}
+    ${zeile(74, ["⏎"], "Umbenennen", "Ordner anklicken, dann Enter")}
+    ${zeile(132, ["⌘", "⌫"], "In den Papierkorb", "⌫ ist die Löschtaste oben rechts")}
+    ${zeile(190, ["⌘", "Z"], "Rückgängig", "der Hoppla-Griff bei jedem Missgeschick")}`, 244);
+}
+
 function browserFenster(url, inhalt, addrMarkiert = false, backMarkiert = false) {
   return `<rect x="40" y="16" width="360" height="200" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
     <rect x="40" y="16" width="360" height="52" rx="10" fill="#F1EEE6"/>
@@ -935,6 +1046,65 @@ function browserFenster(url, inhalt, addrMarkiert = false, backMarkiert = false)
     <rect x="112" y="44" width="272" height="21" rx="10" fill="${F.papier}" stroke="${addrMarkiert ? F.amber : F.linie}" stroke-width="${addrMarkiert ? 3 : 1.5}"/>
     <text x="126" y="59" font-size="13" fill="${F.ink}" font-weight="600">${url}</text>
     ${inhalt}`;
+}
+
+/* Kleines Landschafts-Bildchen als Platzhalter für Fotos */
+function bildchen(x, y, b, h) {
+  return `<rect x="${x}" y="${y}" width="${b}" height="${h}" rx="4" fill="${F.himmel}"/>
+    <circle cx="${x + b * 0.76}" cy="${y + h * 0.28}" r="${Math.min(b, h) * 0.13}" fill="#E8B93C"/>
+    <path d="M${x},${y + h} L${x + b * 0.34},${y + h * 0.44} L${x + b * 0.62},${y + h} Z" fill="#A9CBB8"/>
+    <path d="M${x + b * 0.46},${y + h} L${x + b * 0.74},${y + h * 0.56} L${x + b},${y + h} Z" fill="#8FB89F"/>
+    <rect x="${x}" y="${y}" width="${b}" height="${h}" rx="4" fill="none" stroke="${F.linie}" stroke-width="1.5"/>`;
+}
+
+function gBildersuche() {
+  return sv(`
+    ${browserFenster("blumen im garten", `
+      <text x="64" y="88" font-size="12" fill="${F.grau}">Alle</text>
+      <text x="106" y="88" font-size="12" fill="${F.tealDark}" font-weight="700">Bilder</text>
+      <line x1="104" y1="94" x2="142" y2="94" stroke="${F.amber}" stroke-width="3"/>
+      <text x="156" y="88" font-size="12" fill="${F.grau}">Videos</text>
+      <text x="208" y="88" font-size="12" fill="${F.grau}">News</text>
+      ${bildchen(64, 104, 96, 48)}
+      ${bildchen(172, 104, 96, 48)}
+      ${bildchen(280, 104, 96, 48)}
+      ${bildchen(64, 160, 96, 44)}
+      ${bildchen(172, 160, 96, 44)}
+      ${bildchen(280, 160, 96, 44)}
+    `)}
+    <text x="220" y="240" text-anchor="middle" font-size="14" fill="${F.ink}">Erst suchen wie immer …</text>
+    <text x="220" y="262" text-anchor="middle" font-size="14" fill="${F.grau}">… dann oben in der Zeile auf „Bilder“ klicken</text>`, 274);
+}
+
+function gBildSpeichern() {
+  return sv(`
+    ${browserFenster("google.de", `
+      ${bildchen(58, 82, 150, 108)}
+      <rect x="56" y="80" width="154" height="112" rx="6" fill="none" stroke="${F.amber}" stroke-width="3"/>
+      <text x="133" y="206" text-anchor="middle" font-size="11" fill="#8A5E14" font-weight="600">das große Bild</text>
+      <rect x="216" y="86" width="164" height="106" rx="9" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+      <text x="228" y="106" font-size="11" fill="${F.grau}">Bild in neuem Tab öffnen</text>
+      <rect x="222" y="114" width="152" height="24" rx="6" fill="${F.amber}" opacity="0.3"/>
+      <text x="228" y="131" font-size="11.5" fill="${F.ink}" font-weight="700">Bild speichern unter …</text>
+      <text x="228" y="154" font-size="11" fill="${F.grau}">Bild kopieren</text>
+      <text x="228" y="176" font-size="11" fill="${F.grau}">Bildadresse kopieren</text>
+    `)}
+    <text x="220" y="238" text-anchor="middle" font-size="14" fill="${F.ink}">Rechtsklick (2 Finger) auf das große Bild …</text>
+    <text x="220" y="260" text-anchor="middle" font-size="14" fill="${F.grau}">… dann „Bild speichern unter …“ wählen</text>`, 272);
+}
+
+function gDownloads() {
+  return sv(`
+    ${finderFenster(`
+      <rect x="52" y="134" width="88" height="20" rx="5" fill="${F.teal}" opacity="0.18"/>
+      <rect x="52" y="134" width="88" height="20" rx="5" fill="none" stroke="${F.amber}" stroke-width="2.5"/>
+      ${bildchen(164, 84, 60, 44)}
+      <text x="194" y="142" text-anchor="middle" font-size="10" fill="${F.ink}">Blume.jpg</text>
+      ${pfeil(234, 108, 292, 108, F.amber, 5)}
+      ${ordnerSymbol(306, 92, "Bilder")}
+    `)}
+    <text x="220" y="228" text-anchor="middle" font-size="14" fill="${F.ink}">Alles Heruntergeladene sammelt sich in „Downloads“</text>
+    <text x="220" y="250" text-anchor="middle" font-size="14" fill="${F.grau}">Von dort ziehst du es in den Ordner, wo es hingehört</text>`, 262);
 }
 
 function gChrome() {
@@ -1115,6 +1285,143 @@ function gMailSchreiben() {
     <text x="76" y="206" font-size="14" fill="${F.ink}">Liebe Grüße, Mama</text>`, 240);
 }
 
+/* --- Claude: Symbol, Fenster, Chat --- */
+const CL = "#D97757";
+
+function funke(cx, cy, r, farbe = "#fff") {
+  let l = "";
+  for (let i = 0; i < 8; i++) {
+    const w = i * Math.PI / 4;
+    l += `<line x1="${(cx + r * 0.22 * Math.cos(w)).toFixed(1)}" y1="${(cy + r * 0.22 * Math.sin(w)).toFixed(1)}" x2="${(cx + r * Math.cos(w)).toFixed(1)}" y2="${(cy + r * Math.sin(w)).toFixed(1)}" stroke="${farbe}" stroke-width="${(r * 0.3).toFixed(1)}" stroke-linecap="round"/>`;
+  }
+  return l;
+}
+
+function claudeSymbol(x, y, g = 52) {
+  return `<rect x="${x}" y="${y}" width="${g}" height="${g}" rx="${g / 4.5}" fill="${CL}"/>
+    ${funke(x + g / 2, y + g / 2, g * 0.3)}`;
+}
+
+function mikro(cx, cy, farbe = "#54504A", gr = 1) {
+  return `<rect x="${cx - 3.5 * gr}" y="${cy - 8 * gr}" width="${7 * gr}" height="${11 * gr}" rx="${3.5 * gr}" fill="${farbe}"/>
+    <path d="M${cx - 6.5 * gr},${cy + 1 * gr} a${6.5 * gr},${6.5 * gr} 0 0 0 ${13 * gr},0" fill="none" stroke="${farbe}" stroke-width="${2 * gr}"/>
+    <line x1="${cx}" y1="${cy + 7 * gr}" x2="${cx}" y2="${cy + 10 * gr}" stroke="${farbe}" stroke-width="${2 * gr}"/>`;
+}
+
+/* Eingabefeld unten im Claude-Fenster */
+function claudeFeld(inhalt, markiert = false, mitMikro = false) {
+  return `<rect x="146" y="176" width="238" height="28" rx="14" fill="#FBF9F4" stroke="${markiert ? F.amber : F.linie}" stroke-width="${markiert ? 3 : 1.5}"/>
+    <text x="160" y="195" font-size="11" fill="${inhalt ? F.ink : F.grau}">${inhalt || "Schreib deine Frage …"}</text>
+    ${mitMikro ? mikro(348, 190, CL, 0.8) : ""}
+    <circle cx="370" cy="190" r="10" fill="${CL}"/>
+    <path d="M370,185 L375,191 L365,191 Z" fill="#fff"/>`;
+}
+
+function claudeFenster(inhalt, feld = "", neuMarkiert = false, feldMarkiert = false, mitMikro = false) {
+  return `<rect x="40" y="16" width="360" height="196" rx="10" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+    <rect x="40" y="16" width="360" height="26" rx="10" fill="#F1EEE6"/>
+    <rect x="40" y="30" width="360" height="12" fill="#F1EEE6"/>
+    <circle cx="56" cy="29" r="5" fill="${F.rot}"/><circle cx="72" cy="29" r="5" fill="${F.gelb}"/><circle cx="88" cy="29" r="5" fill="${F.gruen}"/>
+    <text x="220" y="34" text-anchor="middle" font-size="12" fill="${F.grau}" font-weight="600">Claude</text>
+    <rect x="40" y="42" width="96" height="170" fill="#F5F2EA"/>
+    <rect x="48" y="52" width="80" height="20" rx="6" fill="${neuMarkiert ? "#F6E3DA" : "#EDE8DC"}" ${neuMarkiert ? `stroke="${F.amber}" stroke-width="2.5"` : ""}/>
+    <text x="88" y="66" text-anchor="middle" font-size="9" fill="${F.ink}" font-weight="700">+ Neues Gespräch</text>
+    <text x="50" y="90" font-size="8.5" fill="${F.grau}">Frühere Gespräche</text>
+    <text x="50" y="108" font-size="9.5" fill="${F.ink}">Ei kochen</text>
+    <text x="50" y="126" font-size="9.5" fill="${F.grau}">Brief ans Amt</text>
+    <text x="50" y="144" font-size="9.5" fill="${F.grau}">Rücken-Übungen</text>
+    ${inhalt}
+    ${claudeFeld(feld, feldMarkiert, mitMikro)}`;
+}
+
+function claudeFrageBlase(y, text, w = 168) {
+  const x = 384 - w;
+  return `<rect x="${x}" y="${y}" width="${w}" height="26" rx="11" fill="#EDE8DC"/>
+    <text x="${x + 12}" y="${y + 17}" font-size="11" fill="${F.ink}">${text}</text>`;
+}
+
+function claudeAntwort(y, zeilen) {
+  return `<circle cx="154" cy="${y + 8}" r="8" fill="${CL}"/>${funke(154, y + 8, 5)}
+    ${zeilen.map((z, i) => `<text x="170" y="${y + 13 + i * 16}" font-size="11" fill="${F.ink}">${z}</text>`).join("")}`;
+}
+
+function gClaudeStart() {
+  return sv(`
+    ${claudeFenster(`
+      ${funke(266, 100, 16, CL)}
+      <text x="266" y="140" text-anchor="middle" font-size="14" fill="${F.ink}" font-weight="600">Wie kann ich helfen?</text>
+    `)}
+    <rect x="118" y="228" width="204" height="46" rx="12" fill="#F2EFE8" stroke="${F.linie}" stroke-width="1.5"/>
+    <rect x="130" y="234" width="34" height="34" rx="8" fill="#C9C4B8"/>
+    <rect x="174" y="234" width="34" height="34" rx="8" fill="#C9C4B8"/>
+    ${claudeSymbol(218, 234, 34)}
+    <rect x="214" y="230" width="42" height="42" rx="11" fill="none" stroke="${F.amber}" stroke-width="3.5"/>
+    <rect x="262" y="234" width="34" height="34" rx="8" fill="#C9C4B8"/>
+    <text x="220" y="292" text-anchor="middle" font-size="14" fill="${F.grau}">das orange Symbol im Dock – ein Klick genügt</text>`, 302);
+}
+
+function gClaudeFrage() {
+  return sv(`
+    ${claudeFenster(`
+      ${claudeFrageBlase(56, "Wie lange kocht ein weiches Ei?")}
+      ${claudeAntwort(94, ["Für ein weiches Ei rechnest du", "etwa 4 bis 5 Minuten, ab dem", "Moment, in dem das Wasser …"])}
+    `, "Wie lange kocht ein weiches Ei?", false, true)}
+    <text x="220" y="234" text-anchor="middle" font-size="14" fill="${F.grau}">tippen, dann die Enter-Taste ↵ – die Antwort kommt von selbst</text>`, 244);
+}
+
+function gClaudeDiktieren() {
+  return sv(`
+    <rect x="40" y="88" width="360" height="52" rx="26" fill="#FBF9F4" stroke="${F.amber}" stroke-width="3"/>
+    ${mikro(76, 112, CL, 1.4)}
+    <path d="M96,100 a12,12 0 0 1 0,24" fill="none" stroke="${CL}" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+    <path d="M104,94 a20,20 0 0 1 0,36" fill="none" stroke="${CL}" stroke-width="2.5" stroke-linecap="round" opacity="0.45"/>
+    <text x="130" y="118" font-size="14" fill="${F.ink}">Was koche ich heute Abend?|</text>
+    <rect x="112" y="18" width="56" height="48" rx="9" fill="#F8F6F1" stroke="${F.linie}" stroke-width="2"/>
+    <text x="140" y="46" text-anchor="middle" font-size="20" fill="${F.ink}" font-weight="700">⌘</text>
+    <text x="140" y="60" text-anchor="middle" font-size="9" fill="${F.grau}">Befehl</text>
+    <text x="182" y="48" text-anchor="middle" font-size="20" fill="${F.grau}" font-weight="700">+</text>
+    <rect x="196" y="18" width="56" height="48" rx="9" fill="#F8F6F1" stroke="${F.linie}" stroke-width="2"/>
+    <text x="224" y="50" text-anchor="middle" font-size="22" fill="${F.ink}" font-weight="700">D</text>
+    <text x="284" y="38" font-size="13" fill="${F.ink}" font-weight="700">beide gleichzeitig</text>
+    <text x="284" y="56" font-size="13" fill="${F.grau}">→ Mikrofon geht an</text>
+    ${pfeil(224, 70, 200, 84, F.amber)}
+    <text x="220" y="168" text-anchor="middle" font-size="14" fill="${F.ink}">Sprich ganz normal – deine Worte erscheinen im Feld</text>
+    <text x="220" y="192" text-anchor="middle" font-size="13" fill="${F.grau}">Fertig? ⌘ + D noch einmal, dann Enter ↵ zum Abschicken</text>`, 206);
+}
+
+function gClaudeNachfragen() {
+  return sv(`
+    ${claudeFenster(`
+      ${claudeFrageBlase(50, "Was ist ein Router?", 122)}
+      ${claudeAntwort(82, ["Ein Router verbindet die Geräte", "in deiner Wohnung mit dem …"])}
+      ${claudeFrageBlase(126, "Erklär mir das einfacher", 148)}
+    `, "", false, false)}
+    ${pfeil(300, 236, 300, 206, F.amber)}
+    <text x="220" y="252" text-anchor="middle" font-size="14" fill="${F.grau}">Einfach weiterfragen – Claude weiß, worum es gerade ging</text>`, 262);
+}
+
+function gClaudeNeu() {
+  return sv(`
+    ${claudeFenster(`
+      ${funke(266, 104, 14, CL)}
+      <text x="266" y="142" text-anchor="middle" font-size="13" fill="${F.grau}">frisch und leer für ein neues Thema</text>
+    `, "", true, false)}
+    ${pfeil(120, 236, 92, 206, F.amber)}
+    <text x="128" y="240" font-size="13" fill="#8A5E14" font-weight="600">oben: neu anfangen · darunter: alte Gespräche zum Nachlesen</text>`, 250);
+}
+
+function gClaudeVorsicht() {
+  const spalte = (x, farbe, rahmen, titel, punkte) => `
+    <rect x="${x}" y="20" width="186" height="176" rx="14" fill="${F.pad}" stroke="${rahmen}" stroke-width="2"/>
+    <text x="${x + 93}" y="46" text-anchor="middle" font-size="14" font-weight="700" fill="${farbe}">${titel}</text>
+    ${punkte.map((p, i) => `<text x="${x + 16}" y="${76 + i * 28}" font-size="12.5" fill="${F.ink}">${p}</text>`).join("")}`;
+  return sv(`
+    ${spalte(20, F.tealDark, "#BFD6CF", "✓ Dafür ist er gut", ["erklären, was etwas heißt", "Briefe und E-Mails", "Rezepte und Ideen", "„sag das einfacher“"])}
+    ${spalte(234, F.rot, "#EBC7C1", "⚠️ Hier aufpassen", ["Zahlen und Termine", "Gesundheit und Geld", "keine Passwörter!", "keine Bankdaten!"])}
+    <text x="220" y="226" text-anchor="middle" font-size="14" fill="${F.grau}">Er kann sich irren – und klingt dabei sehr überzeugt.</text>
+    <text x="220" y="248" text-anchor="middle" font-size="14" fill="${F.grau}">Bei wichtigen Dingen: lieber Julien fragen.</text>`, 258);
+}
+
 /* Eine Druckstufe: Finger, Pfeil, gedrückte Platte */
 function klickStufe(x, nr, titel, unter, tief, ok) {
   const py = tief ? 138 : 128;
@@ -1257,10 +1564,15 @@ const GRAFIKEN = {
   scrollen: gScrollen, ziehen: gZiehen, schreibtisch: gSchreibtisch, dock: gDock,
   programmoeffnen: gProgrammOeffnen, fensterknoepfe: gFensterKnoepfe, beenden: gBeenden,
   finder: gFinder, ordnerneu: gOrdnerNeu, verschieben: gVerschieben, suchen: gSuchen,
-  papierkorb: gPapierkorb, chrome: gChrome, adressleiste: gAdressleiste, googeln: gGoogeln,
-  youtube: gYoutube, zurueck: gZurueck, lesezeichen: gLesezeichen, mailoeffnen: gMailOeffnen, maillesen: gMailLesen,
+  papierkorb: gPapierkorb, ordnerumbenennen: gOrdnerUmbenennen, unterordner: gUnterordner,
+  speicherort: gSpeicherort, wiederfinden: gWiederfinden, ordnerloeschen: gOrdnerLoeschen,
+  finderkurzbefehle: gFinderKurzbefehle, chrome: gChrome, adressleiste: gAdressleiste, googeln: gGoogeln,
+  youtube: gYoutube, zurueck: gZurueck, lesezeichen: gLesezeichen,
+  bildersuche: gBildersuche, bildspeichern: gBildSpeichern, downloads: gDownloads, mailoeffnen: gMailOeffnen, maillesen: gMailLesen,
   antworten: gAntworten, mailschreiben: gMailSchreiben,
   kraeftigerklick: gKraeftigerKlick,
+  claudestart: gClaudeStart, claudefrage: gClaudeFrage, claudediktieren: gClaudeDiktieren,
+  claudenachfragen: gClaudeNachfragen, claudeneu: gClaudeNeu, claudevorsicht: gClaudeVorsicht,
   zoomstart: gZoomStart, zoombeitreten: gZoomBeitreten, zoomton: gZoomTon,
   zoombild: gZoomBild, zoomverlassen: gZoomVerlassen
 };
@@ -1650,7 +1962,8 @@ const THEMEN = [
   { id: "finder", name: "Ordner & Dateien", emoji: "📁" },
   { id: "internet", name: "Internet & YouTube", emoji: "🌍" },
   { id: "mail", name: "E-Mail", emoji: "✉️" },
-  { id: "zoom", name: "Zoom & Videoanrufe", emoji: "🎥" }
+  { id: "zoom", name: "Zoom & Videoanrufe", emoji: "🎥" },
+  { id: "claude", name: "Claude: fragen & diktieren", emoji: "✨" }
 ];
 
 const KARTEN = [
@@ -1761,11 +2074,58 @@ const KARTEN = [
     hilfe: ["Wichtig: auf eine FREIE Stelle rechtsklicken, nicht auf eine Datei – sonst kommt ein anderes Menü.", "Name vertippt? Einmal auf den Ordnernamen klicken, kurz warten, nochmal klicken – dann kannst du ihn neu tippen.", "Der Ordner heißt „Neuer Ordner“? Dann war die Namenseingabe schon vorbei. Macht nichts – umbenennen geht wie oben."]
   },
   {
+    id: "ordnerumbenennen", thema: "finder", titel: "Einen Ordner umbenennen", gfx: "ordnerumbenennen",
+    text: ["Ein Name passt nicht mehr? Du kannst ihn jederzeit ändern – nichts geht dabei verloren, der Inhalt bleibt genau so, wie er ist.",
+      "So geht es am sichersten: Klicke den Ordner EINMAL an, damit er blau umrandet ist. Drücke dann die Enter-Taste (↵). Der Name wird blau hinterlegt – das heißt: Jetzt kannst du tippen.",
+      "Tippe den neuen Namen und drücke noch einmal Enter. Fertig.",
+      "Gute Namen sind kurz und sagen, was drin ist: „Briefe“, „Rezepte“, „Fotos 2026“."],
+    uebung: "Suche im Finder deinen Ordner „Übung“. Klicke ihn einmal an, drücke Enter, tippe „Meine Übungen“ und drücke wieder Enter. Steht der neue Name da?",
+    hilfe: ["Enter macht hier NICHT „öffnen“ – zum Öffnen brauchst du den Doppelklick. Enter benennt um.",
+      "Es geht auch mit Rechtsklick (zwei Finger) auf den Ordner und dann „Umbenennen“.",
+      "Beim Tippen ist der alte Name blau markiert und verschwindet automatisch, sobald du den ersten Buchstaben tippst.",
+      "Doch nicht umbenennen? Drücke die esc-Taste oben links, dann bleibt alles beim Alten."]
+  },
+  {
+    id: "unterordner", thema: "finder", titel: "Ordner im Ordner: Unterordner", gfx: "unterordner",
+    text: ["In einen Ordner darfst du wieder Ordner legen. Das ist wie eine Schublade mit Mappen darin – und in jeder Mappe stecken die einzelnen Blätter.",
+      "So machst du das: Öffne den Ordner mit einem Doppelklick. Du bist jetzt DRIN. Dann legst du wie gewohnt einen neuen Ordner an – Rechtsklick auf eine freie Stelle, „Neuer Ordner“.",
+      "Wo du gerade bist, steht oben im Fenster als Reihe: „Dokumente › Briefe“. Ein Klick auf einen Namen weiter links bringt dich wieder zurück nach draußen.",
+      "Übertreib es nicht: Zwei Ebenen reichen fast immer. Sonst suchst du hinterher selbst."],
+    uebung: "Öffne mit Doppelklick deinen Ordner „Meine Übungen“. Lege darin einen neuen Ordner an und nenne ihn „Test“. Klicke oben in der Reihe auf den Namen davor – du bist wieder eine Ebene höher.",
+    hilfe: ["Du weißt nicht mehr, wo du bist? Oben im Fenster steht immer der Name des Ordners, in dem du gerade bist.",
+      "Zurück geht auch mit den Tasten ⌘ (Befehl) + ↑ – das bringt dich eine Ebene nach oben.",
+      "Ein Ordner darf leer sein. Er wartet einfach, bis du etwas hineinlegst."]
+  },
+  {
     id: "verschieben", thema: "finder", titel: "Eine Datei in einen Ordner legen", gfx: "verschieben", interaktiv: "finderverschieben",
     text: ["Aufräumen heißt: Dateien in Ordner ziehen.",
       "Datei anklicken und festhalten, auf den Ordner ziehen (er färbt sich dunkel), loslassen. Die Datei liegt jetzt im Ordner."],
     uebung: "Ziehe im Finder irgendeine Datei auf deinen Ordner „Übung“ und lass los. Öffne den Ordner mit einem Doppelklick – da ist sie! (Du kannst sie genauso wieder herausziehen.)",
     hilfe: ["Das ist „Festhalten und ziehen“ aus dem Trackpad-Thema – dieselbe Bewegung.", "Der Ordner muss sich dunkel färben, BEVOR du loslässt. Sonst landet die Datei nur daneben.", "Datei verrutscht? Einfach nochmal greifen und weiterziehen. Es geht nichts verloren."]
+  },
+  {
+    id: "speicherort", thema: "finder", titel: "Wo landet ein Dokument, wenn du es sicherst?", gfx: "speicherort",
+    text: ["Wenn du etwas schreibst und speicherst, fragt der Mac zwei Dinge: Wie soll es heißen? Und wo soll es hin?",
+      "Das Kästchen heißt „Sichern“. Oben tippst du einen Namen, zum Beispiel „Brief an die Krankenkasse“. Darunter steht bei „Ort“ ein Ordner – meistens „Dokumente“.",
+      "Genau dieser Ort ist das Wichtige: Da liegt deine Datei später. Schau kurz hin, bevor du auf „Sichern“ klickst. Dann weißt du hinterher, wo du suchen musst.",
+      "Willst du woanders hin, klickst du auf das kleine ⌄ neben dem Ort und suchst dir deinen Ordner aus."],
+    uebung: "Öffne das Programm „TextEdit“ (über die Lupe: „TextEdit“ tippen, Enter). Schreibe einen Satz. Drücke ⌘ + S zum Sichern, tippe den Namen „Mein Test“ und schau: Was steht bei „Ort“? Dann auf „Sichern“.",
+    hilfe: ["Das Kästchen ist ganz klein und zeigt nur wenig? Klicke auf das kleine Dreieck ⌄ ganz rechts – dann klappt es groß auf und du siehst alle Ordner.",
+      "„Dokumente“ ist ein guter Standard-Ort. Wenn du unsicher bist, lass es dabei.",
+      "Der Name darf Leerzeichen und Umlaute haben. Nur ein Doppelpunkt geht nicht.",
+      "⌘ + S ist der Kurzbefehl für Sichern. Er funktioniert in fast jedem Programm."]
+  },
+  {
+    id: "wiederfinden", thema: "finder", titel: "Ein gespeichertes Dokument wiederfinden", gfx: "wiederfinden",
+    text: ["Du hast etwas gespeichert und weißt nicht mehr, wo? Zwei Wege führen dich hin.",
+      "Erster Weg: Öffne den Finder und klicke links in der Leiste auf „Zuletzt benutzt“. Dort steht alles, woran du zuletzt gearbeitet hast – das Neueste ganz oben.",
+      "Zweiter Weg: Tippe den Namen oben rechts in das Suchfeld des Finder-Fensters. Klicke danach unter dem Feld auf „Diesen Mac“, dann wird überall gesucht.",
+      "Und jetzt das Aufräumen: Ziehe die gefundene Datei einfach auf den richtigen Ordner in der linken Leiste oder im Fenster – festhalten, ziehen, loslassen. Ab jetzt liegt sie da, wo sie hingehört."],
+    uebung: "Öffne den Finder und klicke links auf „Zuletzt benutzt“. Findest du dein „Mein Test“ von vorhin? Ziehe es auf deinen Ordner „Meine Übungen“. Öffne den Ordner mit Doppelklick und schau nach: Ist es drin?",
+    hilfe: ["„Zuletzt benutzt“ ist keine echte Schublade, sondern nur eine Liste. Die Datei selbst liegt weiterhin in ihrem Ordner – Ziehen verschiebt trotzdem das Original.",
+      "Sicherer Weg: Rechtsklick auf die Datei, dann „Im übergeordneten Ordner anzeigen“. Der Finder springt dahin, wo sie wirklich liegt.",
+      "Du findest die linke Leiste nicht? Dann ist sie ausgeblendet: oben im Menü „Darstellung“ → „Seitenleiste einblenden“.",
+      "Nichts gefunden? Tippe nur ein Wort aus dem Namen, nicht den ganzen. Groß- und Kleinschreibung ist egal."]
   },
   {
     id: "suchen", thema: "finder", titel: "Etwas wiederfinden: die Lupe", gfx: "suchen",
@@ -1780,6 +2140,30 @@ const KARTEN = [
       "Wie im echten Leben gilt: Sie ist erst dann wirklich weg, wenn der Korb geleert wird. Bis dahin kannst du alles wieder herausholen – Papierkorb anklicken, Datei herausziehen."],
     uebung: "Ziehe eine Datei, die du nicht mehr brauchst, auf den Papierkorb. Klicke dann auf den Papierkorb und schau hinein: Sie liegt noch drin. Wenn du magst, ziehe sie wieder heraus.",
     hilfe: ["Du kannst also nichts aus Versehen endgültig löschen – der Papierkorb ist dein Sicherheitsnetz.", "Aus Versehen etwas gelöscht? Papierkorb öffnen, Datei zurückziehen. Fertig."]
+  },
+  {
+    id: "ordnerloeschen", thema: "finder", titel: "Einen ganzen Ordner löschen", gfx: "ordnerloeschen",
+    text: ["Ordner löschst du genauso wie Dateien: auf den Papierkorb im Dock ziehen. Oder: Ordner anklicken und Rechtsklick → „In den Papierkorb legen“.",
+      "Ein Unterschied ist wichtig: Alles, was IM Ordner liegt, wandert mit in den Papierkorb. Auch die Sachen, die du nicht mehr auf dem Schirm hattest.",
+      "Deshalb die Regel: erst mit Doppelklick hineinschauen, ob wirklich nichts Wichtiges drin ist – dann löschen.",
+      "Und keine Sorge: Im Papierkorb liegt noch alles. Rechtsklick darauf und „Zurücklegen“ bringt es an seinen alten Platz zurück."],
+    uebung: "Lege einen Ordner „Weg damit“ an, ziehe ihn auf den Papierkorb. Öffne dann den Papierkorb, mache einen Rechtsklick auf den Ordner und wähle „Zurücklegen“. Er ist wieder da.",
+    hilfe: ["Der Kurzbefehl dafür heißt ⌘ (Befehl) + ⌫ (die Löschtaste oben rechts). Karte anklicken, Tasten drücken – schneller als Ziehen.",
+      "Sofort gemerkt, dass es falsch war? ⌘ + Z macht es rückgängig, solange du nichts anderes gemacht hast.",
+      "Wirklich weg ist es erst, wenn der Papierkorb geleert wird. Das macht ihr besser zusammen mit Julien.",
+      "Ordner, die der Mac selbst braucht (zum Beispiel „Programme“), lassen sich gar nicht erst löschen. Da schützt er dich."]
+  },
+  {
+    id: "finderkurzbefehle", thema: "finder", titel: "Kurzbefehle: schneller mit der Tastatur", gfx: "finderkurzbefehle",
+    text: ["Für Dinge, die du oft machst, gibt es Tastenkürzel. Du hältst eine oder zwei Tasten gedrückt und tippst einen Buchstaben dazu.",
+      "Die vier wichtigsten im Finder: ⇧⌘N legt einen neuen Ordner an. Die Enter-Taste benennt um. ⌘⌫ legt etwas in den Papierkorb. Und ⌘Z macht das Letzte rückgängig.",
+      "Achtung bei „neuer Ordner“: Die Umschalttaste ⇧ (der Pfeil nach oben, links außen) muss dabei sein. ⌘N allein öffnet nur ein neues Finder-Fenster.",
+      "Merk dir am besten nur eines: ⌘Z. Das ist der Hoppla-Griff und rettet dich fast immer."],
+    uebung: "Öffne den Finder und gehe in deinen Ordner „Meine Übungen“. Drücke ⇧ + ⌘ + N: Ein neuer Ordner erscheint. Tippe „Kurz“ und drücke Enter. Drücke danach ⌘ + Z – der Ordner ist wieder weg.",
+    hilfe: ["⌘ ist die Befehlstaste neben der Leertaste (mit dem Kleeblatt). ⇧ ist die Umschalttaste mit dem Pfeil nach oben. ⌫ ist die Löschtaste rechts oben.",
+      "Erst die Tasten mit den Zeichen gedrückt HALTEN, dann kurz den Buchstaben antippen, dann alles loslassen.",
+      "Du musst dir das nicht merken. Alles geht auch weiter mit Rechtsklick und Menü – die Kürzel sind nur schneller.",
+      "Im Menü oben stehen die Kürzel übrigens immer neben dem Befehl. Da kannst du jederzeit nachschauen."]
   },
 
   {
@@ -1802,6 +2186,38 @@ const KARTEN = [
       "Google zeigt dir dann eine Liste mit Antworten. Die blauen Überschriften sind anklickbar: Ein Klick darauf öffnet die Seite."],
     uebung: "Tippe in die Adressleiste: Apfelkuchen Rezept – und drücke Enter. Klicke dann auf ein Ergebnis, das dich anspricht.",
     hilfe: ["Du kannst Google alles fragen, in ganz normalen Worten: „Wie wird das Wetter morgen“, „Öffnungszeiten Apotheke“.", "Die ersten Treffer sind manchmal Werbung (steht „Gesponsert“ dabei) – die darunter sind oft die besseren."]
+  },
+  {
+    id: "bildersuche", thema: "internet", titel: "Bilder suchen im Internet", gfx: "bildersuche",
+    text: ["Google findet nicht nur Text, sondern auch Bilder: Blumen, Kuchen zum Anschauen, Urlaubsorte, alte Autos – alles.",
+      "So geht es: Tippe deinen Suchbegriff wie gewohnt ein und drücke Enter. Klicke dann oben in der schmalen Zeile auf „Bilder“. Statt Textzeilen erscheinen jetzt lauter Bilder nebeneinander.",
+      "Ein Klick auf ein Bild zeigt es groß an. Gefällt es dir nicht, klickst du einfach das nächste an. Kaputt geht dabei nichts."],
+    uebung: "Gehe auf google.de und suche „Blumen im Garten“. Klicke dann oben auf „Bilder“. Schau dir in Ruhe an, was kommt, und klicke ein Bild an, das dir gefällt.",
+    hilfe: ["Die Zeile mit „Alle · Bilder · Videos“ steht direkt unter dem Suchfeld, ganz oben links.", "Es kommen immer mehr Bilder nach, wenn du mit zwei Fingern nach unten streichst.", "Zurück zur normalen Suche: oben auf „Alle“ klicken."]
+  },
+  {
+    id: "bildspeichern", thema: "internet", titel: "Ein Bild aus dem Internet speichern", gfx: "bildspeichern",
+    text: ["Ein Bild, das dir gefällt, kannst du auf deinen Mac holen. Das nennt man herunterladen oder speichern.",
+      "Klicke das Bild zuerst an, damit es GROSS erscheint. Mache dann einen Rechtsklick darauf – also mit zwei Fingern auf das Trackpad tippen. Ein Menü klappt auf.",
+      "Wähle darin „Bild speichern unter …“. Jetzt kommt das Sichern-Kästchen, das du schon kennst: Namen tippen, bei „Ort“ nachschauen, auf „Sichern“ klicken.",
+      "Speichere am besten gleich in einen sinnvollen Ordner, zum Beispiel „Bilder“. Dann musst du hinterher nicht suchen."],
+    uebung: "Suche ein Bild in der Bildersuche und klicke es an, damit es groß wird. Rechtsklick darauf, dann „Bild speichern unter …“. Nenne es „Blume“ und sichere es in deinen Ordner „Meine Übungen“.",
+    hilfe: ["Wichtig: auf das GROSSE Bild rechtsklicken, nicht auf die kleine Vorschau. Sonst bekommst du nur ein winziges, unscharfes Bild.",
+      "Das Menü sieht je nach Seite etwas anders aus. Such einfach die Zeile mit „speichern unter“ – das ist die richtige.",
+      "Im Sichern-Kästchen keine Ordner zu sehen? Klicke auf das kleine ⌄ rechts, dann klappt es groß auf.",
+      "Für dich zu Hause ist das in Ordnung. Weitergeben oder öffentlich ins Internet stellen solltest du fremde Bilder nicht – die gehören jemand anderem."]
+  },
+  {
+    id: "downloads", thema: "internet", titel: "Wo landen heruntergeladene Sachen?", gfx: "downloads",
+    text: ["Manchmal fragt der Mac gar nicht, wohin etwas soll. Dann landet es automatisch im Ordner „Downloads“ – das ist der Eingangskorb deines Macs.",
+      "Du findest ihn im Finder links in der Leiste: „Downloads“. Das Neueste steht ganz oben.",
+      "Und dann räumst du auf, genau wie geübt: Datei anklicken, festhalten, in den richtigen Ordner ziehen, loslassen.",
+      "In Chrome siehst du frisch Geladenes außerdem oben rechts an einem kleinen Pfeil nach unten."],
+    uebung: "Öffne den Finder und klicke links auf „Downloads“. Schau, was sich da angesammelt hat. Such dir eine Sache aus, die du behalten willst, und ziehe sie in einen passenden Ordner.",
+    hilfe: ["Der Downloads-Ordner darf ruhig voll sein. Er ist ein Durchgangsort, kein Lagerplatz.",
+      "Deine Datei ist nicht da? Dann hast du beim Speichern einen anderen Ort gewählt. Schau im Finder unter „Zuletzt benutzt“.",
+      "Sachen, die du nicht kennst und nicht brauchst, kannst du von dort in den Papierkorb ziehen.",
+      "In Chrome zeigt ein Klick auf den Pfeil oben rechts die letzten Downloads. „Im Finder anzeigen“ springt genau dorthin, wo die Datei liegt."]
   },
   {
     id: "youtube", thema: "internet", titel: "YouTube: Videos schauen", gfx: "youtube",
@@ -1899,6 +2315,59 @@ const KARTEN = [
       "Aus Versehen gedrückt? Kein Drama: Klicke den Link noch einmal an, und du bist wieder dabei."],
     uebung: "Beende einen Testanruf mit Julien selbst: roter Knopf unten rechts, dann in der Nachfrage noch einmal „Meeting verlassen“.",
     hilfe: ["Nur das Fenster am roten Punkt zu schließen reicht meistens auch – der rote Knopf ist aber der saubere Weg.", "Der rote Knopf ist immer ganz rechts in der dunklen Leiste, weit weg von Ton und Bild – da verklickt man sich nicht.", "Nach dem Verlassen bleibt Zoom noch geöffnet. Das ist normal, du kannst es einfach zumachen."]
+  },
+
+  {
+    id: "claudestart", thema: "claude", titel: "Claude: dein Helfer zum Fragen", gfx: "claudestart",
+    text: ["Claude ist ein Helfer, dem du Fragen stellen kannst – in ganz normalen Sätzen, so wie du sie auch Julien stellen würdest.",
+      "Er antwortet dir auch in normalen Sätzen. Du musst nichts suchen und dich durch keine Internetseiten klicken.",
+      "Du öffnest ihn mit einem Klick auf das orange Symbol im Dock. Unten im Fenster ist ein breites Feld – da kommt deine Frage hinein. Oben erscheint dann die Antwort."],
+    uebung: "Öffne Claude mit einem Klick auf das orange Symbol im Dock. Schau dir das Fenster in Ruhe an: unten das Feld zum Schreiben, oben die große Fläche für die Antworten. Schließe es danach am roten Punkt wieder.",
+    hilfe: ["Das Symbol ist orange mit einem weißen Funken darauf.", "Claude ist nicht im Dock? Nimm die Lupe oben rechts: „Claude“ tippen, Enter drücken.", "Es kann nichts kaputtgehen. Claude ändert nichts auf deinem Mac – ihr redet nur miteinander."]
+  },
+  {
+    id: "claudefrage", thema: "claude", titel: "Eine Frage stellen", gfx: "claudefrage",
+    text: ["Klicke unten in das breite Feld. Der Strich blinkt: Jetzt kannst du tippen.",
+      "Schreib deine Frage so, wie du sie aussprechen würdest. Zum Beispiel: „Wie lange muss ein Ei kochen, damit es weich ist?“ Rechtschreibung ist völlig egal.",
+      "Dann drückst du die Enter-Taste (↵). Die Antwort erscheint Zeile für Zeile von oben nach unten. Das dauert ein paar Sekunden – das ist normal, da ist nichts kaputt."],
+    uebung: "Öffne Claude, klicke unten ins Feld und tippe eine echte Frage von dir hinein. Drücke Enter und lies in Ruhe, was zurückkommt.",
+    hilfe: ["Es gibt keine falschen Fragen. Claude ist nie genervt, und du darfst so oft fragen, wie du magst.", "Die Antwort ist länger als das Fenster? Mit zwei Fingern nach oben streichen – das Scrollen kennst du schon.", "Statt Enter geht auch der kleine runde Pfeil-Knopf rechts im Feld."]
+  },
+  {
+    id: "claudediktieren", thema: "claude", titel: "Sprechen statt tippen", gfx: "claudediktieren",
+    text: ["Tippen dauert dir zu lange? Du kannst Claude deine Frage auch einfach sagen.",
+      "So geht es: Klicke zuerst unten ins Feld, damit der Strich blinkt. Drücke dann ⌘ (Befehl) und D gleichzeitig. Ein Mikrofon erscheint: Jetzt hört dein Mac zu.",
+      "Sprich ganz normal und in ruhigem Tempo. Deine Worte erscheinen nach und nach im Feld. Bist du fertig, drückst du ⌘ und D noch einmal – das Mikrofon geht aus. Dann Enter zum Abschicken.",
+      "Die ⌘-Taste liegt unten neben der Leertaste, links und rechts davon. Auf ihr steht ein kleines Kleeblatt-Zeichen."],
+    uebung: "Öffne Claude, klicke ins Feld und drücke ⌘ + D. Sag laut: „Was koche ich heute Abend?“ Warte, bis der Satz im Feld steht. Dann ⌘ + D noch einmal und Enter zum Abschicken.",
+    hilfe: ["Es passiert nichts? Klicke zuerst einmal ins Feld – der Strich muss blinken, bevor ⌘ + D wirkt.",
+      "Ein Wort ist falsch angekommen? Nicht schlimm, Claude versteht dich trotzdem. Du kannst auch einfach weitersprechen.",
+      "Sprich in normaler Lautstärke. Das Mikrofon sitzt oben am Bildschirmrand, du musst dich nicht vorbeugen.",
+      "Du darfst mitten im Satz aufhören und den Rest tippen – beides geht gemischt."]
+  },
+  {
+    id: "claudenachfragen", thema: "claude", titel: "Einfach weiterfragen", gfx: "claudenachfragen",
+    text: ["Claude merkt sich, worüber ihr gerade redet. Du musst nichts wiederholen und nichts noch einmal erklären.",
+      "War die Antwort zu lang oder zu kompliziert, schreib einfach: „Erklär mir das einfacher.“ Oder: „Kürzer bitte.“ Oder: „Was heißt das genau?“",
+      "Das ist der große Unterschied zu Google: Du darfst nachhaken, so oft du willst, bis du es verstanden hast."],
+    uebung: "Stelle eine Frage. Wenn die Antwort da ist, schreibe (oder sage mit ⌘ + D): „Erklär mir das bitte einfacher.“ Vergleiche die beiden Antworten.",
+    hilfe: ["Höflich sein musst du nicht – darfst du aber gern.", "Auch gute Sätze: „Nenn mir drei Beispiele“ oder „Mach eine Liste daraus“.", "Du kannst auch sagen: „Ich habe das nicht verstanden.“ Dann versucht es Claude ganz anders."]
+  },
+  {
+    id: "claudeneu", thema: "claude", titel: "Ein neues Thema anfangen", gfx: "claudeneu",
+    text: ["Alles, was ihr besprecht, gehört zu EINEM Gespräch. Für etwas ganz anderes fängst du besser ein neues an – sonst wird es schnell unübersichtlich.",
+      "Dafür ist links oben der Knopf „Neues Gespräch“. Ein Klick, und die Fläche ist wieder leer.",
+      "Deine alten Gespräche sind nicht weg: Sie stehen links untereinander. Ein Klick darauf, und du kannst alles wieder nachlesen."],
+    uebung: "Klicke links oben auf „Neues Gespräch“ und stelle eine ganz andere Frage. Klicke danach links auf dein vorheriges Gespräch – siehst du, wie alles wieder da ist?",
+    hilfe: ["Die Namen der alten Gespräche vergibt Claude selbst, meist nach deiner ersten Frage.", "Es geht nichts verloren, wenn du das Fenster schließt. Beim nächsten Öffnen ist alles wieder da.", "Du siehst die Liste links nicht? Dann ist die Leiste zugeklappt – oben links gibt es ein kleines Symbol zum Aufklappen."]
+  },
+  {
+    id: "claudevorsicht", thema: "claude", titel: "Was Claude kann – und was nicht", gfx: "claudevorsicht",
+    text: ["Claude ist gut bei: erklären, Ideen sammeln, Briefe und E-Mails formulieren, Rezepte, Wörter übersetzen, etwas einfacher sagen.",
+      "Aber er kann sich auch irren – besonders bei Zahlen, Terminen und Namen. Und er sagt es dann trotzdem sehr überzeugt. Bei wichtigen Dingen wie Gesundheit, Geld oder Behörden fragst du besser Julien oder einen Menschen vom Fach.",
+      "Ganz wichtig: Keine Passwörter, keine Bankdaten und keine Kontonummern hineinschreiben. Dafür ist Claude nicht da."],
+    uebung: "Frage Claude nach etwas, das du selbst gut weißt – zum Beispiel nach einem Rezept, das du seit Jahren kochst. Lies die Antwort und vergleiche sie mit dem, was du kennst.",
+    hilfe: ["Ein guter Satz zum Nachhaken: „Bist du dir da sicher?“ Dann sagt Claude oft von selbst, wo er unsicher ist.", "Claude ist kein Arzt und kein Anwalt.", "Wenn dich etwas verunsichert: Markiere diese Karte unten mit „Das möchte ich Julien fragen“."]
   }
 ];
 
@@ -1907,7 +2376,7 @@ const KARTEN = [
    ============================================================ */
 /* Version dieser App-Datei. Muss zur "version" in version.json passen –
    sonst holt sich die App beim Start automatisch die neue Fassung. */
-const VERSION = "2.7.0";
+const VERSION = "2.10.0";
 
 /* Abstand nach der n-ten geschafften Wiederholung: Stufe 1 → morgen, Stufe 2 → 2 Tage, … */
 const PLAN_TAGE = [1, 2, 4, 7, 14, 30, 60];
