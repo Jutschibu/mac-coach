@@ -997,6 +997,43 @@ function gZurueck() {
     <text x="106" y="110" font-size="13" fill="#8A5E14" font-weight="600">der Zurück-Pfeil</text>`, 226);
 }
 
+function stern(cx, cy, r, fuellung, rand = "") {
+  let p = "";
+  for (let i = 0; i < 10; i++) {
+    const w = (-90 + i * 36) * Math.PI / 180;
+    const rr = i % 2 ? r * 0.45 : r;
+    p += `${i ? "L" : "M"}${(cx + rr * Math.cos(w)).toFixed(1)},${(cy + rr * Math.sin(w)).toFixed(1)} `;
+  }
+  return `<path d="${p}Z" fill="${fuellung}" ${rand ? `stroke="${rand}" stroke-width="2" stroke-linejoin="round"` : ""}/>`;
+}
+
+function gLesezeichen() {
+  return sv(`
+    ${browserFenster("wetter.com", `
+      <rect x="40" y="68" width="360" height="22" fill="#F8F6F1"/>
+      <line x1="40" y1="90" x2="400" y2="90" stroke="${F.linie}" stroke-width="1"/>
+      <text x="56" y="83" font-size="11" fill="${F.ink}">★ Wetter</text>
+      <text x="122" y="83" font-size="11" fill="${F.grau}">★ Rezepte</text>
+      <text x="196" y="83" font-size="11" fill="${F.grau}">★ Julien</text>
+      ${stern(368, 54, 9, "#4285F4")}
+      <circle cx="368" cy="54" r="15" fill="none" stroke="${F.amber}" stroke-width="3"/>
+      <text x="60" y="122" font-size="13" fill="${F.ink}" font-weight="700">1. Stern anklicken</text>
+      <text x="60" y="148" font-size="13" fill="${F.ink}" font-weight="700">2. Namen kürzen</text>
+      <text x="60" y="174" font-size="13" fill="${F.ink}" font-weight="700">3. „Fertig“</text>
+      <text x="60" y="196" font-size="12" fill="${F.grau}">→ oben steht es dann als Wort</text>
+      <rect x="238" y="98" width="152" height="100" rx="9" fill="${F.papier}" stroke="${F.linie}" stroke-width="2"/>
+      <text x="250" y="118" font-size="11" fill="${F.ink}" font-weight="700">Lesezeichen hinzugefügt</text>
+      <rect x="250" y="126" width="128" height="20" rx="4" fill="#FBF9F4" stroke="#B9C7D8" stroke-width="1.5"/>
+      <text x="257" y="140" font-size="11" fill="${F.ink}">Wetter</text>
+      <text x="250" y="160" font-size="10" fill="${F.grau}">Ordner: Lesezeichenleiste</text>
+      <rect x="250" y="168" width="56" height="20" rx="5" fill="#F1EEE6"/>
+      <text x="278" y="182" text-anchor="middle" font-size="10" fill="${F.grau}">Entfernen</text>
+      <rect x="322" y="168" width="56" height="20" rx="5" fill="#4285F4"/>
+      <text x="350" y="182" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">Fertig</text>
+    `)}
+    <text x="220" y="238" text-anchor="middle" font-size="14" fill="${F.grau}">Einmal merken – ab dann genügt ein Klick oben in der Leiste</text>`, 248);
+}
+
 function mailFenster(modus) {
   const zeile = (y, fett, blau) => `
     ${blau ? `<circle cx="140" cy="${y + 10}" r="4" fill="#1E73E8"/>` : ""}
@@ -1221,7 +1258,7 @@ const GRAFIKEN = {
   programmoeffnen: gProgrammOeffnen, fensterknoepfe: gFensterKnoepfe, beenden: gBeenden,
   finder: gFinder, ordnerneu: gOrdnerNeu, verschieben: gVerschieben, suchen: gSuchen,
   papierkorb: gPapierkorb, chrome: gChrome, adressleiste: gAdressleiste, googeln: gGoogeln,
-  youtube: gYoutube, zurueck: gZurueck, mailoeffnen: gMailOeffnen, maillesen: gMailLesen,
+  youtube: gYoutube, zurueck: gZurueck, lesezeichen: gLesezeichen, mailoeffnen: gMailOeffnen, maillesen: gMailLesen,
   antworten: gAntworten, mailschreiben: gMailSchreiben,
   kraeftigerklick: gKraeftigerKlick,
   zoomstart: gZoomStart, zoombeitreten: gZoomBeitreten, zoomton: gZoomTon,
@@ -1780,6 +1817,18 @@ const KARTEN = [
     uebung: "Klicke auf irgendeiner Internetseite einen Link an (irgendwas Blaues oder Unterstrichenes). Und dann: Klicke oben links auf den Zurück-Pfeil. Du bist wieder auf der Seite davor.",
     hilfe: ["Der Pfeil ist ganz oben links, direkt unter dem roten Knopf.", "Ist der Pfeil grau, gibt es nichts zum Zurückgehen – du bist am Anfang.", "Es gibt auch einen Vor-Pfeil daneben, der geht wieder vorwärts."]
   },
+  {
+    id: "lesezeichen", thema: "internet", titel: "Eine Seite aufheben: das Lesezeichen", gfx: "lesezeichen",
+    text: ["Eine Seite, die du öfter brauchst, musst du nicht jedes Mal neu tippen oder suchen. Du kannst sie aufheben – das nennt man ein Lesezeichen.",
+      "Dafür ist der kleine Stern ganz rechts in der Adressleiste da. Bist du auf der richtigen Seite, klickst du einmal auf den Stern: Er wird blau, die Seite ist gemerkt.",
+      "Es geht ein Kästchen auf. Oben steht ein Name – meist viel zu lang. Klicke hinein und tippe etwas Kurzes, zum Beispiel „Wetter“. Darunter steht „Lesezeichenleiste“, das ist genau richtig. Dann auf „Fertig“.",
+      "Ab jetzt steht „Wetter“ als Wort oben unter der Adressleiste. Ein Klick darauf, und die Seite ist da."],
+    uebung: "Gehe auf wetter.com. Klicke rechts in der Adressleiste auf den Stern. Tippe als Namen „Wetter“ und klicke auf „Fertig“. Schau nach oben: Steht „Wetter“ jetzt unter der Adressleiste? Dann klicke einmal darauf.",
+    hilfe: ["Der Stern sitzt am rechten Ende der Adressleiste. Blau heißt: gemerkt. Grau heißt: nicht gemerkt.",
+      "Du siehst keine Leiste mit deinen Lesezeichen? Drücke ⌘ (Befehl) + Umschalt + B gleichzeitig – dann erscheint sie unter der Adressleiste.",
+      "Aus Versehen gemerkt? Klicke den blauen Stern noch einmal an und dann auf „Entfernen“.",
+      "Der Name darf alles sein, was DIR hilft. Kurz ist besser – dann passen mehr Lesezeichen nebeneinander in die Leiste."]
+  },
 
   {
     id: "mailoeffnen", thema: "mail", titel: "Das Mail-Programm", gfx: "mailoeffnen",
@@ -1858,7 +1907,7 @@ const KARTEN = [
    ============================================================ */
 /* Version dieser App-Datei. Muss zur "version" in version.json passen –
    sonst holt sich die App beim Start automatisch die neue Fassung. */
-const VERSION = "2.6.0";
+const VERSION = "2.7.0";
 
 /* Abstand nach der n-ten geschafften Wiederholung: Stufe 1 → morgen, Stufe 2 → 2 Tage, … */
 const PLAN_TAGE = [1, 2, 4, 7, 14, 30, 60];
